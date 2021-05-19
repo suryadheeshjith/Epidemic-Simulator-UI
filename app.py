@@ -82,13 +82,13 @@ if __name__ == "__main__":
 
     elif(option == 'Input data on the Website'):
         UI.clear_files()
-        # app = UI.MultiPage()
-        # app.navbar_name = "Navigation"
-        # app.next_page_button = "Next Page"
-        # app.previous_page_button = "Previous Page"
-        # app.add_app("Simulation Configuration", UI.UI_Simulation_Config)
+        app = UI.MultiPage()
+        app.navbar_name = "Navigation"
+        app.next_page_button = "Next Page"
+        app.previous_page_button = "Previous Page"
+        app.add_app("Simulation Configuration", UI.UI_Simulation_Config)
         # app.add_app("Agents", UI.UI_Agents)
         # app.add_app("Model", UI.UI_Model)
         # app.add_app("Events", UI.UI_Events)
         # app.add_app("Results", UI.UI_Results)
-        # app.run()
+        app.run()
