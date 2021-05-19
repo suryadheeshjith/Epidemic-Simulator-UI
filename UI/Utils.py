@@ -7,8 +7,8 @@ from os import listdir
 from os.path import isfile, join
 
 file_list = ['requirements.txt','README.md','.gitignore','app.py']
-def clear_files():
 
+def clear_files():
     onlyfiles = [f for f in listdir('.') if isfile(join('', f))]
 
     for file in onlyfiles:
@@ -18,7 +18,6 @@ def clear_files():
 
 def write_to_file(string, filepath):
     fp = open(filepath,"w")
-    files_added.append(filepath)
     fp.writelines(string)
     fp.close()
 
