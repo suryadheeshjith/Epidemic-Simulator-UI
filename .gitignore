@@ -4,3 +4,6 @@ __pycache__
 cache
 .DS_Store
 testing_stats.json
+*.txt
+UserModel.py
+Generate_policy.py
