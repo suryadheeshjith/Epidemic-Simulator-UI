@@ -1,6 +1,5 @@
 import streamlit as st
 import UI
-import Simulator
 import Simulator.World
 import os.path as osp
 import importlib.util
