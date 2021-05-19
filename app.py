@@ -3,7 +3,8 @@ import UI
 import Simulator.World
 import os.path as osp
 import importlib.util
-
+import logging
+logging.warning("Hello there! I am a warning")
 
 def module_from_file(module_name, file_path):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
@@ -57,7 +58,7 @@ if __name__ == "__main__":
         if(button):
             if(not config_obj):
                 st.write("config.txt file has not been uploaded correctly!")
-                
+
             elif(UI.files_checker(config_obj)):
 
                 example_path = ''
