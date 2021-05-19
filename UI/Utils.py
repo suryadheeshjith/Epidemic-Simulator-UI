@@ -118,8 +118,8 @@ def config_checker(config_obj):
 
 def files_checker(config_obj):
     if(osp.isfile('config.txt') and osp.isfile(config_obj.agents_filename) and osp.isfile('UserModel.py') and osp.isfile('Generate_policy.py')):
-        # if(config_checker(config_obj)):
-        #     st.write("Looks like you have some files you haven't uploaded yet (Based on the config.txt file given). We've still run the simulation though!")
+        if(config_checker(config_obj)):
+            st.write("Looks like you have some files you haven't uploaded yet (Based on the config.txt file given). We've still run the simulation though!")
 
         return True
 
