@@ -50,7 +50,7 @@ class SessionState(object):
             setattr(self, key, val)
 
 
-def get(**kwargs):
+def get_session_state(**kwargs):
     """Gets a SessionState object for the current session.
 
     Creates a new object if necessary.
