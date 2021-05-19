@@ -1,4 +1,6 @@
 import streamlit as st
+from UI.multipage import save
+
 def generate_policy():
 	policy_list=[]
 

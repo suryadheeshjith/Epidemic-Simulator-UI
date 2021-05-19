@@ -76,7 +76,7 @@ class MultiPage:
 		    pag = int(pag)
 		    f.close()
 
-		side_1, side_2 = st.sidebar.beta_columns(2)
+		side_1, side_3, side_4, side_5, side_2 = st.beta_columns(5)
 
 		with side_1:
 			if st.button(self.previous_page_button):

@@ -1,3 +1,6 @@
+"""
+This is the only file from Episimmer that was changed for the UI!
+"""
 import random
 import copy
 import sys
@@ -35,10 +38,10 @@ class World():
 		sim_obj= Simulate.Simulate(self.config_obj,self.model,self.policy_list,self.event_restriction_fn,agents_obj,locations_obj)
 		sim_obj.onStartSimulation()
 
-		self.st_list[3].progress(0)
+		self.st_list[3].progress(0.0)
 		for i in range(time_steps):
 			self.st_list[2].write("Simulating Time Step : {0}".format(i+1))
-			self.st_list[3].progress(i+1)
+			self.st_list[3].progress((i+1)/time_steps)
 			if self.interactionFiles_list==[] or self.interactionFiles_list==None:
 				interactions_filename=None
 			else:
@@ -71,10 +74,10 @@ class World():
 		for state in self.model.individual_state_types:
 			tdict[state]=[0]*(self.config_obj.time_steps+1)
 
-		self.st_list[1].progress(0)
+		self.st_list[1].progress(0.0)
 		for i in range(self.config_obj.worlds):
 			self.st_list[0].write("Simulating World : {0}".format(i+1))
-			self.st_list[1].progress(i+1)
+			self.st_list[1].progress((i+1)/self.config_obj.worlds)
 			sdict,_,_ = self.one_world()
 			for state in self.model.individual_state_types:
 				for j in range(len(tdict[state])):
