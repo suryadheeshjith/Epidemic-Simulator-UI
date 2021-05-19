@@ -1,4 +1,5 @@
 import streamlit as st
+from UI.MultiPage import MultiPage
 import UI
 import Simulator.World
 import os.path as osp
