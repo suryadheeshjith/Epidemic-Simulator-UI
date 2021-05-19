@@ -54,11 +54,14 @@ def get_uploaders(key):
 
     file = st.file_uploader("Upload config file",key=key)
     if(file is not None):
-        string = file.getvalue().decode("utf-8")
-        write_to_file(string, "config.txt")
-        config_obj=Simulator.ReadFile.ReadConfiguration("config.txt")
-        config_obj.list_interactions_files = None #### Editing simulator
-        config_obj.list_events_files = None #### Editing simulator
+        if(file.name == "config.txt"):
+            string = file.getvalue().decode("utf-8")
+            write_to_file(string, "config.txt")
+            config_obj=Simulator.ReadFile.ReadConfiguration("config.txt")
+            config_obj.list_interactions_files = None #### Editing simulator
+            config_obj.list_events_files = None #### Editing simulator
+        else:
+            st.write("Please add the file config.txt (Check cases too)")
 
     if(config_obj is not None):
         file = st.file_uploader("Upload agents file")
@@ -160,40 +163,40 @@ def files_checker(config_obj):
         return False
 
     if(not osp.isfile(config_obj.agents_filename)):
-        st.write("Agents file has not been uploaded correctly!")
+        st.write("Please upload the agents file specified in config.txt!")
         return False
 
     if(not osp.isfile('UserModel.py')):
-        st.write("UserModel.py has not been uploaded correctly!")
+        st.write("Please upload UserModel.py!")
         return False
 
     if(not osp.isfile('Generate_policy.py')):
-        st.write("Generate_policy.py has not been uploaded correctly!")
+        st.write("Please upload Generate_policy.py!")
         return False
 
     if(config_obj.locations_filename):
         if(not osp.isfile(config_obj.locations_filename)):
-            st.write("Location file present in config.txt has not been uploaded correctly!")
+            st.write("Please upload the locations file specified in config.txt!")
             return False
 
     if(config_obj.interactions_files_list):
         if(not osp.isfile(config_obj.interactions_files_list)):
-            st.write("Interaction file present in config.txt has not been uploaded correctly!")
+            st.write("Please upload the interactions list file specified in config.txt!")
             return False
         else:
             for file in config_obj.list_interactions_files:
                 if(not osp.isfile(file)):
-                    st.write("All individual time step interaction files have not been uploaded correctly!")
+                    st.write("Please upload the individual interactions file specified in your interactions files list!")
                     return False
 
     if(config_obj.events_files_list):
         if(not osp.isfile(config_obj.events_files_list)):
-            st.write("Events file present in config.txt has not been uploaded correctly!")
+            st.write("Please upload the events list file specified in config.txt!")
             return False
         else:
             for file in config_obj.list_events_files:
                 if(not osp.isfile(file)):
-                    st.write("All individual time step event files have not been uploaded correctly!")
+                    st.write("Please upload the individual events file specified in your events files list!")
                     return False
 
     return True

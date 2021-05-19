@@ -30,7 +30,11 @@ def get_policy(example_path):
 if __name__ == "__main__":
 
     # Session state
-    session = UI.get_session_state(run_id=0)
+    session = UI.get_session_state(first_run=True,run_id=0)
+    if(session.first_run):
+        session.first_run = False
+        UI.clear_files()
+
     st.write("""
     # Welcome to our Epidemic Simulator!
     """)
@@ -54,15 +58,14 @@ if __name__ == "__main__":
 
         config_obj = UI.get_uploaders(key=session.run_id)
 
-        button = st.button("Click here to Run!")
-
         st_list = UI.get_progress_UI_list()
 
-        if(button):
-            if(not config_obj):
-                st.write("config.txt file has not been uploaded correctly!")
+        if(not config_obj):
+            st.write("Begin by uploading the config.txt file")
 
-            elif(UI.files_checker(config_obj)):
+        elif(UI.files_checker(config_obj)):
+            button = st.button("Click here to Run!")
+            if(button):
 
                 example_path = ''
 
