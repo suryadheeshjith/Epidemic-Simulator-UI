@@ -6,8 +6,9 @@ import importlib.util
 import logging
 from os import listdir
 from os.path import isfile, join
-onlyfiles = [f for f in listdir('') if isfile(join('', f))]
-logging.warning(onlyfiles.join(','))
+onlyfiles = [f for f in listdir('.') if isfile(join('', f))]
+strin = ','.join(onlyfiles)
+logging.warning(strin)
 
 def module_from_file(module_name, file_path):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
