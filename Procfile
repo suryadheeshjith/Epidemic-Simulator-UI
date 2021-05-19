@@ -1,1 +1,1 @@
-web: sh -c 'cd src && ls && setup.sh && streamlit run app.py'
+web: sh 'setup.sh && cd src && streamlit run app.py'
