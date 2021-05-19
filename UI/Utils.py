@@ -1,15 +1,20 @@
 import streamlit as st
 import Simulator.ReadFile
+import logging
 import os.path as osp
 import os
+from os import listdir
+from os.path import isfile, join
 
-files_added = []
-
+file_list = ['requirements.txt','README.md','.gitignore','app.py']
 def clear_files():
-    for file in files_added:
-        if osp.isfile(file):
+
+    onlyfiles = [f for f in listdir('.') if isfile(join('', f))]
+
+    for file in onlyfiles:
+        if file not in file_list:
             os.remove(file)
-            print("Removed",file)
+            logging.warning("Removed File {0}".format(file))
 
 def write_to_file(string, filepath):
     fp = open(filepath,"w")
