@@ -1,5 +1,5 @@
 import streamlit as st
-from UI.multipage import save
+from UI.MultiPage import save
 
 def UI_Agents(prev_vars):
 	def write_agents(filename,n):

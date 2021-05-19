@@ -1,2 +1,2 @@
 import streamlit as st
-from UI.multipage import save
+from UI.MultiPage import save
