@@ -4,9 +4,10 @@ import Simulator.World
 import os.path as osp
 import importlib.util
 import logging
-logging.warning("Hello there! I am a warning")
-logging.debug("Hello there! I am a debug")
-logging.error("Hello there! I am an error")
+from os import listdir
+from os.path import isfile, join
+onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+logging.warning(onlyfiles.join(','))
 
 def module_from_file(module_name, file_path):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
