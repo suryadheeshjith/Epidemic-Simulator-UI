@@ -59,54 +59,93 @@ def get_uploaders(key):
     if(config_obj is not None):
         file = st.file_uploader("Upload agents file")
         if(file is not None):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, config_obj.agents_filename)
+            if(file.name == config_obj.agents_filename):
+                string = file.getvalue().decode("utf-8")
+                write_to_file(string, config_obj.agents_filename)
+            else:
+                st.write("""
+                        Add the correct agent file corresponding to agent file given in config.txt.\n
+                        Given File : {0} ; Required File : {1}
+                        """.format(file.name,config_obj.agents_filename))
 
         file = st.file_uploader("Upload Model file")
         if(file is not None):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, "UserModel.py")
+            if(file.name == "UserModel.py"):
+                string = file.getvalue().decode("utf-8")
+                write_to_file(string, "UserModel.py")
+            else:
+                st.write("Please add the file UserModel.py (Check cases too)")
 
         file = st.file_uploader("Upload Policy file")
         if(file is not None):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, "Generate_policy.py")
+            if(file.name == "Generate_policy.py"):
+                string = file.getvalue().decode("utf-8")
+                write_to_file(string, "Generate_policy.py")
+            else:
+                st.write("Please add the file Generate_policy.py (Check cases too)")
 
-        interactions = st.checkbox("Add Interactions")
-        if(interactions):
+        if(config_obj.interactions_files_list):
             file = st.file_uploader("Upload Interactions list file")
             if(file is not None):
-                string = file.getvalue().decode("utf-8")
-                write_to_file(string, config_obj.interactions_files_list)
-                interactions_files_list = get_file_names_list(config_obj.interactions_files_list)
-                config_obj.list_interactions_files = interactions_files_list
-                for file_name in interactions_files_list:
-                    f = st.file_uploader("Upload File name : {0}".format(file_name))
-                    if(f is not None):
-                        string = f.getvalue().decode("utf-8")
-                        write_to_file(string, file_name)
+                if(file.name == config_obj.agents_filename):
+                    string = file.getvalue().decode("utf-8")
+                    write_to_file(string, config_obj.interactions_files_list)
+                    interactions_files_list = get_file_names_list(config_obj.interactions_files_list)
+                    config_obj.list_interactions_files = interactions_files_list
+                    for file_name in interactions_files_list:
+                        f = st.file_uploader("Upload File name : {0}".format(file_name))
+                        if(f is not None):
+                            if(f.name == file_name):
+                                string = f.getvalue().decode("utf-8")
+                                write_to_file(string, file_name)
+                            else:
+                                st.write("""
+                                        Add the correct Interactions file corresponding to files given in {0}.\n
+                                        Given File : {1} ; Required File : {2}
+                                        """.format(config_obj.interactions_files_list,f.name,file_name))
+                else:
+                    st.write("""
+                            Add the correct Interactions list file corresponding to Interactions list file given in config.txt.\n
+                            Given File : {0} ; Required File : {1}
+                            """.format(file.name,config_obj.interactions_files_list))
 
 
-        loc = st.checkbox("Add Locations")
-        if(loc):
+        if(config_obj.locations_filename):
             file = st.file_uploader("Upload Locations")
             if(file is not None):
-                string = file.getvalue().decode("utf-8")
-                write_to_file(string, config_obj.locations_filename)
+                if(file.name == config_obj.locations_filename):
+                    string = file.getvalue().decode("utf-8")
+                    write_to_file(string, config_obj.locations_filename)
+                else:
+                    st.write("""
+                            Add the correct locations file corresponding to locations file given in config.txt.\n
+                            Given File : {0} ; Required File : {1}
+                            """.format(file.name,config_obj.locations_filename))
 
-        eve = st.checkbox("Add Events")
-        if(eve):
+        if(config_obj.events_files_list):
             file = st.file_uploader("Upload Events list file")
             if(file is not None):
-                string = file.getvalue().decode("utf-8")
-                write_to_file(string, config_obj.events_files_list)
-                events_files_list = get_file_names_list(config_obj.events_files_list)
-                config_obj.list_events_files = events_files_list
-                for file_name in events_files_list:
-                    f = st.file_uploader("Upload File name : {0}".format(file_name))
-                    if(f is not None):
-                        string = f.getvalue().decode("utf-8")
-                        write_to_file(string, file_name)
+                if(file.name == config_obj.events_files_list):
+                    string = file.getvalue().decode("utf-8")
+                    write_to_file(string, config_obj.events_files_list)
+                    events_files_list = get_file_names_list(config_obj.events_files_list)
+                    config_obj.list_events_files = events_files_list
+                    for file_name in events_files_list:
+                        f = st.file_uploader("Upload File name : {0}".format(file_name))
+                        if(f is not None):
+                            if(f.name == file_name):
+                                string = f.getvalue().decode("utf-8")
+                                write_to_file(string, file_name)
+                            else:
+                                st.write("""
+                                        Add the correct event file corresponding to files given in {0}.\n
+                                        Given File : {1} ; Required File : {2}
+                                        """.format(config_obj.events_files_list,f.name,file_name))
+                else:
+                    st.write("""
+                            Add the correct Events list file corresponding to Events list file given in config.txt.\n
+                            Given File : {0} ; Required File : {1}
+                            """.format(file.name,config_obj.events_files_list))
 
     return config_obj
 
