@@ -124,9 +124,9 @@ def config_files_checker(config_obj):
             st.write("Events file present in config.txt has not been uploaded!")
 
     if(flag==0):
-        return False
-    else:
         return True
+    else:
+        return False
 
 
 def files_checker(config_obj,text):
