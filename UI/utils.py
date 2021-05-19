@@ -68,7 +68,7 @@ def get_uploaders(key):
         file = st.file_uploader("Upload Policy file")
         if(file is not None):
             string = file.getvalue().decode("utf-8")
-            write_to_file(string, "Generate_Policy.py")
+            write_to_file(string, "Generate_policy.py")
 
         interactions = st.checkbox("Add Interactions")
         if(interactions):

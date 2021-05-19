@@ -104,7 +104,7 @@ class MultiPage:
 
 
 
-		st.sidebar.markdown(f"""<h1 style="text-align:center;">{self.navbar_name}</h1>""", unsafe_allow_html=True)
+		st.sidebar.markdown(f"""<h1 style="text-align:left;">{self.navbar_name}</h1>""", unsafe_allow_html=True)
 		# st.sidebar.text(self.navbar_name)
 		st.sidebar.text('\n')
 

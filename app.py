@@ -25,7 +25,7 @@ def get_policy(example_path):
 if __name__ == "__main__":
 
     # Session state
-    session = UI.SessionState.get(run_id=0)
+    session = UI.get(run_id=0)
 
     st.write("""
     # Welcome to our Epidemic Simulator!
