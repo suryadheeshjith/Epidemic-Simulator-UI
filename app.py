@@ -1,5 +1,4 @@
 import streamlit as st
-from UI.MultiPage import MultiPage
 import UI
 import Simulator.World
 import os.path as osp
@@ -88,8 +87,8 @@ if __name__ == "__main__":
         app.next_page_button = "Next Page"
         app.previous_page_button = "Previous Page"
         app.add_app("Simulation Configuration", UI.UI_Simulation_Config)
-        # app.add_app("Agents", UI.UI_Agents)
-        # app.add_app("Model", UI.UI_Model)
-        # app.add_app("Events", UI.UI_Events)
-        # app.add_app("Results", UI.UI_Results)
+        app.add_app("Agents", UI.UI_Agents)
+        app.add_app("Model", UI.UI_Model)
+        app.add_app("Events", UI.UI_Events)
+        app.add_app("Results", UI.UI_Results)
         app.run()
