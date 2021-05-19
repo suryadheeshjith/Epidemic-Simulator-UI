@@ -56,7 +56,7 @@ if __name__ == "__main__":
         st_list = UI.get_progress_UI_list()
 
         if(button):
-            if(UI.files_checker(config_obj)):
+            if(UI.files_checker(config_obj,text)):
 
                 example_path = ''
 
@@ -69,15 +69,6 @@ if __name__ == "__main__":
                 interactions_files_list,config_obj.locations_filename,events_files_list,st_list)
                 plt = world_obj.simulate_worlds()
                 st.pyplot(plt)
-
-            else:
-                text.write("""
-                    Need more files! Files that are mandatory are :\n
-                    1. config.txt
-                    2. agents.txt
-                    3. UserModel.py
-                    4. Generate_Policy.py
-                    """)
 
 
     elif(option == 'Input data on the Website'):

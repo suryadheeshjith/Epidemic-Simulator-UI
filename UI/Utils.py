@@ -106,22 +106,40 @@ def get_uploaders(key):
 
     return config_obj, interactions_files_list, events_files_list
 
-def config_checker(config_obj):
-    if(config_obj.interactions_files_list or config_obj.locations_filename or config_obj.events_files_list):
+def config_files_checker(config_obj):
+    flag = 0
+    if(config_obj.interactions_files_list):
+        if(not osp.isfile(config_obj.interactions_files_list)):
+            flag+=1
+            st.write("Interaction file present in config.txt has not been uploaded!")
+
+    if(config_obj.locations_filename):
+        if(not osp.isfile(config_obj.locations_filename)):
+            flag+=1
+            st.write("Location file present in config.txt has not been uploaded!")
+
+    if(config_obj.events_files_list):
+        if(not osp.isfile(config_obj.events_files_list)):
+            flag+=1
+            st.write("Events file present in config.txt has not been uploaded!")
+
+    if(flag==0):
+        return False
+    else:
         return True
 
-    config_obj.interactions_files_list = None
-    config_obj.locations_filename = None
-    config_obj.events_files_list = None
 
-    return False
-
-def files_checker(config_obj):
+def files_checker(config_obj,text):
     if(osp.isfile('config.txt') and osp.isfile(config_obj.agents_filename) and osp.isfile('UserModel.py') and osp.isfile('Generate_policy.py')):
-        # Next two lines might break. Not tested....
-        if(config_checker(config_obj)):
-            st.write("Looks like you have some files you haven't uploaded yet (Based on the config.txt file given). We've still run the simulation though!")
+        if(config_files_checker(config_obj)):
+            return True
 
-        return True
-
+    else:
+        text.write("""
+            Need more files! Files that are mandatory are :\n
+            1. config.txt
+            2. agents.txt
+            3. UserModel.py
+            4. Generate_Policy.py
+            """)
     return False
