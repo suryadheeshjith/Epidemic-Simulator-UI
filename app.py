@@ -48,15 +48,14 @@ if __name__ == "__main__":
             UI.clear_files()
             session.run_id += 1
 
-        config_obj, interactions_files_list, events_files_list = UI.get_uploaders(key=session.run_id)
+        config_obj = UI.get_uploaders(key=session.run_id)
 
-        text = st.empty()
         button = st.button("Click here to Run!")
 
         st_list = UI.get_progress_UI_list()
 
         if(button):
-            if(UI.files_checker(config_obj,text)):
+            if(UI.files_checker(config_obj)):
 
                 example_path = ''
 
@@ -66,7 +65,7 @@ if __name__ == "__main__":
 
                 # Creation of World object
                 world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
-                interactions_files_list,config_obj.locations_filename,events_files_list,st_list)
+                config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
                 plt = world_obj.simulate_worlds()
                 st.pyplot(plt)
 
