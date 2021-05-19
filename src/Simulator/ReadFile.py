@@ -13,50 +13,47 @@ class ReadConfiguration():
 		self.agent_info_keys=None
 		self.interaction_info_keys=None
 
-		try:
-			f = open(filename,"r")
+		f = open(filename,"r")
 
-			self.worlds=(int)(self.get_value_config(f.readline()))
-			self.time_steps=(int)(self.get_value_config(f.readline()))
+		self.worlds=(int)(self.get_value_config(f.readline()))
+		self.time_steps=(int)(self.get_value_config(f.readline()))
 
-			self.agent_info_keys=self.get_value_config(f.readline())
-			self.agents_filename=self.get_value_config(f.readline())
-			self.interaction_info_keys=self.get_value_config(f.readline())
-			self.interactions_files_list=self.get_value_config(f.readline())
+		self.agent_info_keys=self.get_value_config(f.readline())
+		self.agents_filename=self.get_value_config(f.readline())
+		self.interaction_info_keys=self.get_value_config(f.readline())
+		self.interactions_files_list=self.get_value_config(f.readline())
 
-			self.location_info_keys=self.get_value_config(f.readline())
-			self.locations_filename=self.get_value_config(f.readline())
-			self.event_info_keys=self.get_value_config(f.readline())
-			self.events_files_list=self.get_value_config(f.readline())
+		self.location_info_keys=self.get_value_config(f.readline())
+		self.locations_filename=self.get_value_config(f.readline())
+		self.event_info_keys=self.get_value_config(f.readline())
+		self.events_files_list=self.get_value_config(f.readline())
 
-			f.close()
-
-
-			if 'Agent Index' not in self.agent_info_keys.split(':'):
-				raise Exception("Error! Agent file  does not contain parameter \'Agent Index\'")
-
-			if 'Agent Index' not in self.interaction_info_keys.split(':'):
-				print("Interaction definition does not contain parameter \'Agent Index\'")
+		f.close()
 
 
-			if 'Interacting Agent Index' not in self.interaction_info_keys.split(':'):
-				print("Interaction definition does not contain parameter \'Interacting Agent Index\'")
+		if 'Agent Index' not in self.agent_info_keys.split(':'):
+			raise Exception("Error! Agent file  does not contain parameter \'Agent Index\'")
+
+		if 'Agent Index' not in self.interaction_info_keys.split(':'):
+			print("Interaction definition does not contain parameter \'Agent Index\'")
 
 
-			if 'Location Index' not in self.location_info_keys.split(':'):
-				print('Location file does not contain parameter \'Location Index\'')
+		if 'Interacting Agent Index' not in self.interaction_info_keys.split(':'):
+			print("Interaction definition does not contain parameter \'Interacting Agent Index\'")
 
 
-			if 'Location Index' not in self.event_info_keys.split(':'):
-				print('Event definition does not contain parameter \'Location Index\'')
+		if 'Location Index' not in self.location_info_keys.split(':'):
+			print('Location file does not contain parameter \'Location Index\'')
 
 
-			if 'Agents' not in self.event_info_keys.split(':'):
-				print('Event definition does not contain parameter \'Agents\'')
+		if 'Location Index' not in self.event_info_keys.split(':'):
+			print('Event definition does not contain parameter \'Location Index\'')
 
-		except:
-			pass
-			
+
+		if 'Agents' not in self.event_info_keys.split(':'):
+			print('Event definition does not contain parameter \'Agents\'')
+
+
 	def get_value_config(self, line):
 	    l = re.findall("\<.*?\>", line)
 	    if len(l)!=1:
