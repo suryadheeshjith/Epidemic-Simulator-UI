@@ -6,7 +6,7 @@ import importlib.util
 import logging
 from os import listdir
 from os.path import isfile, join
-onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+onlyfiles = [f for f in listdir('') if isfile(join('', f))]
 logging.warning(onlyfiles.join(','))
 
 def module_from_file(module_name, file_path):
