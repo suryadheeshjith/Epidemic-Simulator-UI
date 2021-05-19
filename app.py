@@ -4,7 +4,9 @@ import Simulator.World
 import os.path as osp
 import importlib.util
 import logging
-logging.debug("Hello there! I am a warning")
+logging.warning("Hello there! I am a warning")
+logging.debug("Hello there! I am a debug")
+logging.error("Hello there! I am an error")
 
 def module_from_file(module_name, file_path):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
