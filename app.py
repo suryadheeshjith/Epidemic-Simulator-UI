@@ -55,7 +55,10 @@ if __name__ == "__main__":
         st_list = UI.get_progress_UI_list()
 
         if(button):
-            if(UI.files_checker(config_obj)):
+            if(not config_obj):
+                st.write("config.txt file has not been uploaded correctly!")
+                
+            elif(UI.files_checker(config_obj)):
 
                 example_path = ''
 
