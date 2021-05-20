@@ -10,7 +10,7 @@ class MultiPage():
         return object.get_defaults_dict()
 
     def execute_app(self, state):
-        st.sidebar.write("# Navigation")
+        st.sidebar.markdown("# :hammer_and_pick: Navigation")
         radio = st.sidebar.radio("",list(self.pages.keys()))
         self.pages[radio].run(state)
         if(self.pages[radio].requires_reset):

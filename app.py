@@ -52,6 +52,9 @@ def main():
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
+        st.markdown("""
+            #### Use the sidebar to navigate through the different pages to set your simulation parameters.
+            """)
         app = Utils.MultiPage()
         defaults = {}
 
@@ -64,8 +67,8 @@ def main():
         state(params=defaults)
         app.execute_app(state)
 
-
-    st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer). For any other questions regarding the implementation, bring up an issue [here](https://github.com/suryadheeshjith/Epidemic-Simulator-UI)!")
+    st.sidebar.markdown("# :clipboard: About")
+    st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer). For any questions regarding the implementation, bring up an issue [here](https://github.com/suryadheeshjith/Epidemic-Simulator-UI)!")
     state.sync()
 
 

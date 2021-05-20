@@ -4,7 +4,7 @@ from UI.UI import UI_Base
 class UI_Results(UI_Base):
     def __init__(self):
         super().__init__()
-        self.name = 'UI_Results'
+        self.name = 'Results'
         self.requires_reset = False
 
 

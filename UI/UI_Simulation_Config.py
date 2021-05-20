@@ -4,7 +4,7 @@ from UI.UI import UI_Base
 class UI_Simulation_Config(UI_Base):
     def __init__(self):
         super().__init__()
-        self.name = 'UI_Simulation_Config'
+        self.name = 'General Configuration'
 
     def get_defaults_dict(self):
         dict = {}
