@@ -6,8 +6,9 @@ import logging
 import Simulator.ReadFile
 import importlib.util
 import streamlit as st
+import pickle
 
-file_list = ['requirements.txt','README.md','.gitignore','app.py']
+file_list = ['requirements.txt','README.md','.gitignore','app.py','create_config_pickle.py']
 
 ####################################################################
 # Reading and Writing files
@@ -24,18 +25,26 @@ def write_to_file(string, filepath):
     fp.writelines(string)
     fp.close()
 
-####################################################################
-# Generating strings for web run
 
-def write_agents(self, filename,n):
-    header='Agent Index'
+def get_start_config(filename):
+    with open(filename, 'rb') as input:
+        config_obj = pickle.load(input)
+    return config_obj
 
-    f=open(filename,'w')
-    f.write(str(n)+'\n')
-    f.write(header+'\n')
 
-    for i in range(n):
-        f.write(str(i)+'\n')
+def save_agents_file(dict, config_obj):
+    path = "web_agents.txt"
+    header="Agent Index"
+
+    string = str(dict['Number of Agents'])+'\n'
+    string += header+'\n'
+
+    for i in range(dict['Number of Agents']):
+        string +=str(i)+'\n'
+
+    write_to_file(string,path)
+    config_obj.agent_info_keys = header
+    config_obj.agents_filename = path
 
 ####################################################################
 # Retrieve list from file with list of filenames

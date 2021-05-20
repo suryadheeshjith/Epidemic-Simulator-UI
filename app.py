@@ -38,7 +38,6 @@ def main():
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
-        Utils.clear_files()
         st.markdown("""
             #### Use the sidebar to navigate through the different pages to set your simulation parameters.
             """)

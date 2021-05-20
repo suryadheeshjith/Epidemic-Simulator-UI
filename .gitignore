@@ -5,5 +5,5 @@ __pycache__
 testing_stats.json
 UserModel.py
 Generate_policy.py
+Data/dummy_config.txt
 create_config_pickle.py
-dummy_config.txt
