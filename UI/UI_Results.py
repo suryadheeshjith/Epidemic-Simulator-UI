@@ -15,13 +15,24 @@ class UI_Results(UI_Base):
                 for inner_key in state.params[key]:
                     st.markdown("{0} : {1}".format(inner_key,state.params[key][inner_key]))
 
-    def save_files(self, state):
+    def save_data_files(self, state):
+        # Agents
         pass
+
+        # Locations
+        pass
+
+        # Interactions
+        pass
+
+        # Events
+        pass
+
     def run(self, state):
         self.show_configuration(state)
-        self.save_files()
+        self.save_data_files(state)
         config_obj = None # temp
-        Utils.run_simulation_from_web(config_obj)
+        Utils.run_simulation_from_web(config_obj,state)
 
         st.write("Sum of number of agents and worlds : ")
         st.write("{0}".format(state.params['Agents']['Number of Agents']+state.params['General Configuration']['Worlds']))

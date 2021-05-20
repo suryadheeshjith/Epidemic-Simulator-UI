@@ -9,6 +9,8 @@ import streamlit as st
 
 file_list = ['requirements.txt','README.md','.gitignore','app.py']
 
+####################################################################
+# Reading and Writing files
 def clear_files():
     onlyfiles = [f for f in listdir('.') if isfile(join('', f))]
 
@@ -22,6 +24,21 @@ def write_to_file(string, filepath):
     fp.writelines(string)
     fp.close()
 
+####################################################################
+# Generating strings for web run
+
+def write_agents(self, filename,n):
+    header='Agent Index'
+
+    f=open(filename,'w')
+    f.write(str(n)+'\n')
+    f.write(header+'\n')
+
+    for i in range(n):
+        f.write(str(i)+'\n')
+
+####################################################################
+# Retrieve list from file with list of filenames
 
 def get_file_names_list(fileslist_filename):
 
@@ -36,13 +53,15 @@ def get_file_names_list(fileslist_filename):
 
     return files_list
 
+####################################################################
+# File checking
 
 def files_checker(config_obj):
 
     if(not config_obj):
         st.write("Begin by uploading the config.txt file")
         return False
-        
+
     if(not osp.isfile('config.txt')):
         st.write("config.txt file has not been uploaded correctly!")
         return False
@@ -86,18 +105,21 @@ def files_checker(config_obj):
 
     return True
 
+####################################################################
+# Model and Policy file reading
+
 def module_from_file(module_name, file_path):
     spec = importlib.util.spec_from_file_location(module_name, file_path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
 
-def get_model(example_path):
+def get_model_from_file(example_path):
     UserModel = module_from_file("Generate_model", osp.join(example_path,'UserModel.py'))
     model = UserModel.UserModel()
     return model
 
-def get_policy(example_path):
+def get_policy_from_file(example_path):
     Generate_policy = module_from_file("Generate_policy", osp.join(example_path,'Generate_policy.py'))
     policy_list, event_restriction_fn=Generate_policy.generate_policy()
     return policy_list, event_restriction_fn

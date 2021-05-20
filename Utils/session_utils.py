@@ -1,3 +1,7 @@
+####################################################################
+# Obtained from : https://gist.github.com/okld/0aba4869ba6fdc8d49132e6974e2e662
+# Module is still a hack (Sliders aren't resposive on slow slide). Fix Later
+
 from streamlit.hashing import _CodeHasher
 try:
     # Before Streamlit 0.65

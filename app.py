@@ -56,7 +56,8 @@ def main():
         app.execute_app(state)
 
     st.sidebar.markdown("# :clipboard: About")
-    st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer). For any questions regarding the implementation, bring up an issue [here](https://github.com/suryadheeshjith/Epidemic-Simulator-UI)!")
+    st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer).\
+     For any questions regarding the implementation, bring up an issue [here](https://github.com/suryadheeshjith/Epidemic-Simulator-UI)!")
     state.sync()
 
 
