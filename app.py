@@ -5,8 +5,8 @@ import Simulator.World
 
 def main():
 
-    st.write("""
-    # Welcome to our Epidemic Simulator!
+    st.markdown("""
+    # :chart_with_upwards_trend: Welcome to our Epidemic Simulator!
     """)
     st.write("------------------------------------------------------------------------------------")
 
@@ -64,6 +64,8 @@ def main():
         state(params=defaults)
         app.execute_app(state)
 
+
+    st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer). For any other questions regarding the implementation, bring up an issue [here](https://github.com/suryadheeshjith/Epidemic-Simulator-UI)!")
     state.sync()
 
 
