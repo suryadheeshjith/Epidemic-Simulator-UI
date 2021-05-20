@@ -1,6 +1,7 @@
 import streamlit as st
 import UI
 import Utils
+import logging
 
 def main():
 
@@ -34,6 +35,7 @@ def main():
             state.run_id += 1
 
         config_obj = Utils.get_uploaders(key=state.run_id)
+        logging.warn(Utils.__dict__)
         Utils.run_simulation_from_upload(config_obj)
 
     # Options - Input through website
