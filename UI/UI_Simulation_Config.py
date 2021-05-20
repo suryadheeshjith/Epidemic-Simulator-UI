@@ -6,7 +6,7 @@ class UI_Simulation_Config(UI_Base):
         super().__init__()
         self.name = 'General Configuration'
 
-    def get_defaults_dict(self):
+    def get_defaults_dict(self, state):
         dict = {}
         dict['Days'] = 30
         dict['Worlds'] = 1

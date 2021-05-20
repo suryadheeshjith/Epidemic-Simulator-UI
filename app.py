@@ -45,11 +45,11 @@ def main():
         app = Utils.MultiPage()
         defaults = {}
 
-        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Agents(), UI.UI_Results()]
+        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Environment(), UI.UI_Agents(), UI.UI_Model(), UI.UI_Policy(),UI.UI_Results()]
 
         for page_obj in all_pages_objects:
             name = page_obj.name
-            defaults[name] = app.add_page(page_obj)
+            defaults[name] = app.add_page(page_obj,state)
 
         state(params=defaults)
         app.execute_app(state)

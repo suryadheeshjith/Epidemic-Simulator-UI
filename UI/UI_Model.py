@@ -5,104 +5,139 @@ import os.path as osp
 import streamlit as st
 import Simulator.ReadFile
 import Simulator.World
+import Simulator.Model as Model
 from UI.UI import UI_Base
-
-def event_contribute_fn(agent,event_info,location,current_time_step):
-        if agent.state in infected_states:
-            return infectious_dict[agent.state]
-        return 0
-
-def event_recieve_fn(agent,ambient_infection,event_info,location,current_time_step):
-    #Example 1
-    beta=0.1
-    return ambient_infection*beta
 
 class UI_Model(UI_Base):
     def __init__(self):
         super().__init__()
         self.name = 'Model'
 
-    def get_defaults_dict(self):
+    def get_defaults_dict(self, state):
         dict = {}
-        dict['model'] = None
-        dict['Number of compartments']
+        dict['Number of compartments'] = 3
+        dict['Number of transitions'] = 2
+        dict['compartments'] = {}
+        dict['compartments'][0] = {'name':'Susceptible','infectious':False,'initial_prop':0.99}
+        dict['compartments'][1] = {'name':'Infected','infectious':True,'initial_prop':0.01}
+        dict['compartments'][2] = {'name':'Recovered','infectious':False,'initial_prop':0.0}
+        dict['transitions'] = {}
+        dict['transitions'][0] = {'depends_infectious':True, 'initial_index':0, 'final_index':1, 'normal_rate':0.03, 'infectious_rate':{'Infected':0.01}}
+        dict['transitions'][1] = {'depends_infectious':False, 'initial_index':1, 'final_index':2, 'normal_rate':0.03, 'infectious_rate':{'Infected':0.01}}
+        dict['model'] = self.get_model(dict)
         return dict
 
+
     def run(self, state):
-        no_states=st.sidebar.slider("Select number of compartments",1,10,=3,1)
-        no_transitions=st.sidebar.slider("Select number of transitions",0,3,=2,1)
+        state.params[self.name]['Number of compartments']=st.slider("Select number of compartments",1,10,\
+                                                                state.params[self.name]['Number of compartments'],1)
+        state.params[self.name]['Number of transitions']=st.slider("Select number of transitions",0,30,\
+                                                                state.params[self.name]['Number of transitions'],1)
+
+        for i in range(state.params[self.name]['Number of compartments']):
+            st.header("Compartment "+str(i+1))
+            col1, col2 = st.beta_columns(2)
+            name = None
+
+            try:
+                cur_dict = state.params[self.name]['compartments'][i]
+            except:
+                state.params[self.name]['compartments'][i] = {'name':None,'infectious':False,'initial_prop':0.0}
+                cur_dict = state.params[self.name]['compartments'][i]
+
+            cur_dict['name'] = col1.text_input("Name of compartment "+str(i+1), cur_dict['name'])
+
+            if cur_dict['name'] !='None':
+                cur_dict['infectious'] = st.checkbox("Is compartment \'"+cur_dict['name']+"\' infectious?",cur_dict['infectious'])
+
+            if cur_dict['name']!='None':
+                cur_dict['initial_prop'] = col2.slider("Intial proportion of \'"+cur_dict['name']+"\'",0.0,1.0,cur_dict['initial_prop'],0.01)
+
+
+        st.write("------------------------------------------------------------------------------------")
+        individual_types, infected_states, state_proportion = self.get_model_parameters(state.params[self.name])
+        for i in range(state.params[self.name]['Number of transitions']):
+            st.header("Transition "+str(i+1))
+            try:
+                cur_dict = state.params[self.name]['transitions'][i]
+            except:
+                state.params[self.name]['transitions'][i] = {'depends_infectious':False,'initial_index':0,'final_index':0,'normal_rate':0.03,'infectious_rate':{}}
+                cur_dict = state.params[self.name]['transitions'][i]
+
+            cur_dict['depends_infectious'] = st.checkbox("Does transition "+str(i+1)+" depend on infectious states?",cur_dict['depends_infectious'])
+
+            col1, col2, col3 = st.beta_columns(3)
+
+            name1 = col1.selectbox("Initial compartment for transition "+str(i+1),individual_types,index=cur_dict['initial_index'])
+            name2 = col2.selectbox("Final compartment for transition "+str(i+1),individual_types,index=cur_dict['final_index'])
+
+            for j in range(state.params[self.name]['Number of compartments']):
+                if(name1==state.params[self.name]['compartments'][j]['name']):
+                    cur_dict['initial_index'] = j
+                elif(name2==state.params[self.name]['compartments'][j]['name']):
+                    cur_dict['final_index'] = j
+
+            if cur_dict['depends_infectious']:
+                for istate in infected_states:
+                    try:
+                        cur_dict['infectious_rate'][istate] = float(col3.text_input("Rate of infection from compartment "+istate+ " for transition "+str(i+1),cur_dict['infectious_rate'][istate]))
+                    except:
+                        cur_dict['infectious_rate'][istate] = 0.01
+                        cur_dict['infectious_rate'][istate] = float(col3.text_input("Rate of infection from compartment "+istate+ " for transition "+str(i+1),cur_dict['infectious_rate'][istate]))
+            else:
+                cur_dict['normal_rate']=float(col3.text_input("Rate constant for transition "+str(i+1),cur_dict['normal_rate']))
+
+        state.params[self.name]['model'] = self.get_model(state.params[self.name])
+
+    def get_model_parameters(self,dict):
 
         individual_types=[]
         infected_states=[]
         state_proportion={}
+        for i in range(dict['Number of compartments']):
+            cur_dict = dict['compartments'][i]
+            if cur_dict['name']!='None':
+                individual_types.append(cur_dict['name'])
+                if cur_dict['infectious']:
+                    infected_states.append(cur_dict['name'])
+                state_proportion[cur_dict['name']]=cur_dict['initial_prop']
 
-        for i in range(no_states):
-            st.header("Compartment "+str(i+1))
-            col1, col2 = st.beta_columns(2)
-            default='None'
-            if i==0:
-                default='Susceptible'
-            if i==1:
-                default='Infected'
-            if i==2:
-                default='Recovered'
+        return individual_types, infected_states, state_proportion
 
-            state = col1.text_input("Name of compartment "+str(i+1), default)
-            infectious=False
-            initial_prop=0
-            inf_default=False
-            if i==1:
-                inf_default=True
-            if state !='None':
-                infectious = st.checkbox("Is compartment \'"+state+"\' infectious?",inf_default)
-            if i==0 and no_states>1:
-                val=0.99
-            elif i==0 and no_states==1:
-                val=1.0
-            elif i==1:
-                val=0.01
-            else:
-                val=0.0
-            if state!='None':
-                initial_prop = col2.slider("Intial proportion of \'"+state+"\'", min_value=0.0 , max_value=1.0 , value=val , step=0.01 , format=None , key=None )
+    def set_transitions(self, model, dict, infected_states):
+        self.infectious_dict={}
+        for i in range(dict['Number of transitions']):
+            cur_dict = dict['transitions'][i]
 
-            if state!='None':
-                individual_types.append(state)
-                if infectious:
-                    infected_states.append(state)
-                state_proportion[state]=initial_prop
+            initial_state = dict['compartments'][cur_dict['initial_index']]['name']
+            final_state = dict['compartments'][cur_dict['final_index']]['name']
 
-        st.write("------------------------------------------------------------------------------------")
-
-
-        infectious_dict={}
-        model = Model.StochasticModel(individual_types,infected_states,state_proportion)
-        for i in range(no_transitions):
-            st.header("Transition "+str(i+1))
-            def_bool=False
-            if i==0 and infected_states!=[]:
-                def_bool=True
-            p_infection = st.checkbox("Does transition "+str(i+1)+" depend on infectious states?",def_bool)
-            col1, col2, col3 = st.beta_columns(3)
-            def_s1=def_s2=0
-            if i==0 and no_states>1:
-                def_s1=0
-                def_s2=1
-            if i==1 and no_states>2:
-                def_s1=1
-                def_s2=2
-            state1 = col1.selectbox("Initial compartment for transition "+str(i+1),individual_types,index=def_s1)
-            state2 = col2.selectbox("Final compartment for transition "+str(i+1),individual_types,index=def_s2)
-            G.add_edge(state1, state2)
-            if p_infection:
+            if cur_dict['depends_infectious']:
                 l=[]
                 for istate in infected_states:
                     l.append(None)
-                    infectious_dict[istate]=float(col3.text_input("Rate of infection from compartment "+istate+ " for transition "+str(i+1), 0.01))
-                model.set_transition(state1, state2, model.p_infection(l,None))
-            else:
-                rate=float(col3.text_input("Rate constant for transition "+str(i+1), 0.03))
-                model.set_transition(state1, state2, model.p_standard(rate))
+                    self.infectious_dict[istate] = cur_dict['infectious_rate'][istate]
+                model.set_transition(initial_state, final_state, model.p_infection(l,None))
 
-        model.set_event_contribution_fn(event_contribute_fn)
-        model.set_event_recieve_fn(event_recieve_fn)
+            else:
+                model.set_transition(initial_state, final_state, model.p_standard(cur_dict['normal_rate']))
+
+
+    def get_model(self,dict):
+
+        individual_types, infected_states, state_proportion = self.get_model_parameters(dict)
+        model = Model.StochasticModel(individual_types,infected_states,state_proportion)
+        self.set_transitions(model,dict,infected_states)
+        model.set_event_contribution_fn(self.event_contribute_fn)
+        model.set_event_recieve_fn(self.event_recieve_fn)
+
+        return model
+
+    def event_contribute_fn(agent,event_info,location,current_time_step):
+            if agent.state in infected_states:
+                return self.infectious_dict[agent.state]
+            return 0
+
+    def event_recieve_fn(agent,ambient_infection,event_info,location,current_time_step):
+        beta=0.1
+        return ambient_infection*beta

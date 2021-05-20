@@ -5,9 +5,9 @@ class MultiPage():
     def __init__(self):
         self.pages = {}
 
-    def add_page(self, object):
+    def add_page(self, object, state):
         self.pages[object.name] = object
-        return object.get_defaults_dict()
+        return object.get_defaults_dict(state)
 
     def execute_app(self, state):
         st.sidebar.markdown("# :hammer_and_pick: Navigation")
@@ -18,4 +18,4 @@ class MultiPage():
         if(self.pages[radio].requires_reset):
             button = st.button("Reset to defaults")
             if(button):
-                state.params[self.pages[radio].name] = self.pages[radio].get_defaults_dict()
+                state.params[self.pages[radio].name] = self.pages[radio].get_defaults_dict(state)

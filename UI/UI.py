@@ -3,7 +3,7 @@ class UI_Base():
         self.name = None
         self.requires_reset = True
 
-    def get_defaults_dict(self):
+    def get_defaults_dict(self,state):
         return {}
 
     def run(self,state):

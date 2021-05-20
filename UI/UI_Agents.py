@@ -6,7 +6,7 @@ class UI_Agents(UI_Base):
         super().__init__()
         self.name = 'Agents'
 
-    def get_defaults_dict(self):
+    def get_defaults_dict(self, state):
         dict = {}
         dict['Number of Agents'] = 300
         return dict
