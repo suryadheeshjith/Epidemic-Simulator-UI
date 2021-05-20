@@ -16,7 +16,7 @@ def run_simulation_from_upload(config_obj):
             world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
             config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
             plt = world_obj.simulate_worlds()
-            st.pyplot(plt)
+            st.pyplot(plt) 
 
 def run_simulation_from_web(config_obj,state):
     st_list = get_progress_UI_list()
