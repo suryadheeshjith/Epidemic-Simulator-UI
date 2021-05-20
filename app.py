@@ -10,10 +10,10 @@ def main():
     """)
     st.write("------------------------------------------------------------------------------------")
 
-    st.write("This implementation of the simulator is based on the [Episimmer](https://github.com/healthbadge/episimmer) simulator.")
+    st.write("The implementation of this simulator is based on the [Episimmer](https://github.com/healthbadge/episimmer) simulator.")
     st.write("""
-    To get started, choose your mode of inputting your data. Do note that by choosing to upload your files directly, you harness the highest possible capability
-    the simulator has to offer. Inputting data through the website will only have limited capability.
+    To get started, choose your mode of data input. Do note that by choosing to upload your files directly, you harness the highest possible capability
+    the simulator has to offer. Doing this through the website will only have limited capability.
     """)
 
     input_options = ['Upload files (Recommended)', 'Input data on the Website']
