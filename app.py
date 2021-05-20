@@ -34,7 +34,7 @@ def main():
             state.run_id += 1
 
         config_obj = Utils.get_uploaders(key=state.run_id)
-        Utils.run_simulation(config_obj)
+        Utils.run_simulation_from_upload(config_obj)
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
