@@ -18,11 +18,11 @@ class UI_Agents(UI_Base):
 
     def get_defaults_dict(self):
         dict = {}
-        dict['no_agents'] = 300
+        dict['Number of Agents'] = 300
         return dict
 
     def run(self, state):
         # file_name = 'agents.txt'
         # config_obj.agents_filename = file_name
-        state.params[self.name]['no_agents']=st.slider("Select number of agents",0,1000,state.params[self.name]['no_agents'],10)
+        state.params[self.name]['Number of Agents']=st.slider("Select number of agents",0,1000,state.params[self.name]['Number of Agents'],10)
         # write_agents(config_obj.agents_filename,no_agents)

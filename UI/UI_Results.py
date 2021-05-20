@@ -23,4 +23,4 @@ class UI_Results(UI_Base):
         Utils.run_simulation(config_obj)
 
         st.write("Sum of number of agents and worlds : ")
-        st.write("{0}".format(state.params['Agents']['no_agents']+state.params['General Configuration']['worlds']))
+        st.write("{0}".format(state.params['Agents']['Number of Agents']+state.params['General Configuration']['Worlds']))

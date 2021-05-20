@@ -8,10 +8,10 @@ class UI_Simulation_Config(UI_Base):
 
     def get_defaults_dict(self):
         dict = {}
-        dict['days'] = 30
-        dict['worlds'] = 1
+        dict['Days'] = 30
+        dict['Worlds'] = 1
         return dict
 
     def run(self, state):
-        state.params[self.name]['days']=st.slider("Select number of days",1,200,state.params[self.name]['days'],1)
-        state.params[self.name]['worlds']=st.slider("Select number of worlds",1,30,state.params[self.name]['worlds'],1)
+        state.params[self.name]['Days']=st.slider("Select number of days",1,200,state.params[self.name]['Days'],1)
+        state.params[self.name]['Worlds']=st.slider("Select number of worlds",1,30,state.params[self.name]['Worlds'],1)
