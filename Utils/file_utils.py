@@ -7,6 +7,7 @@ import Simulator.ReadFile
 import importlib.util
 import streamlit as st
 import pickle
+import random
 
 file_list = ['requirements.txt','README.md','.gitignore','app.py','create_config_pickle.py']
 
@@ -34,7 +35,7 @@ def get_start_config(filename):
 
 def save_agents_file(dict, config_obj):
     path = "web_agents.txt"
-    header="Agent Index"
+    header = "Agent Index"
 
     string = str(dict['Number of Agents'])+'\n'
     string += header+'\n'
@@ -45,6 +46,51 @@ def save_agents_file(dict, config_obj):
     write_to_file(string,path)
     config_obj.agent_info_keys = header
     config_obj.agents_filename = path
+
+def save_locations_file(dict, config_obj):
+
+    path = "web_locations.txt"
+    header = "Location Index"
+
+    string = str(dict['Number of Locations'])+'\n'
+    string += header+'\n'
+    for i in range(dict['Number of Locations']):
+        string += dict[i]['Name']+'\n'
+
+    write_to_file(string,path)
+    config_obj.location_info_keys = header
+    config_obj.locations_filename = path
+
+def save_interactions_file(dict, config_obj, n):
+
+    list_path = "web_list_interactions.txt"
+    single_path = "web_single_interaction.txt"
+    string = "<"+single_path+">"
+    write_to_file(string, list_path)
+
+    header = "Agent Index:Interacting Agent Index"
+    p=0.0
+    if(dict['Interaction Graph']['name']=='Random Graph'):
+        p = dict['Interaction Graph']['params']['prob']
+    elif(dict['Interaction Graph']['name']=='Fully Connected Graph'):
+        p = 1.0
+
+    lines=[]
+    for i in range(n-1):
+        for j in range(i+1,n):
+            if random.random()<p:
+                lines.append(str(i)+':'+str(j)+'\n')
+                lines.append(str(j)+':'+str(i)+'\n')
+
+    string = str(len(lines))+'\n'
+    string += header+'\n'
+    for line in lines:
+        string += line
+
+    write_to_file(string,single_path)
+    config_obj.interaction_info_keys = header
+    config_obj.interactions_files_list = list_path
+
 
 ####################################################################
 # Retrieve list from file with list of filenames

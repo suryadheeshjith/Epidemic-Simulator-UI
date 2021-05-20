@@ -23,28 +23,30 @@ class UI_Results(UI_Base):
 
     def save_data_files(self, state, config_obj):
         # Agents
-        Utils.save_agents_file(state.params['Agents'], config_obj)
+        Utils.save_agents_file(state.params['Environment']['Agents'], config_obj)
 
         # Locations
-        # Utils
+        dict = state.params['Environment']['Locations']
+        if(dict['Number of Locations']>0):
+            Utils.save_locations_file(dict, config_obj)
 
         # Interactions
-        pass
+        if(state.params['Environment']['Agents']['Number of Agents']!=0):
+            dict = state.params['Environment']['Interactions']
+            if(dict['Interaction Graph']['name']!='No Interactions'):
+                Utils.save_interactions_file(dict, config_obj, state.params['Environment']['Agents']['Number of Agents'])
 
         # Events
-        pass
+        # dict = state.params['Environment']['Locations']
+        # if(dict['Number of Locations']>0)
+        #     Utils.save_locations_file(dict, config_obj)
 
 
     def run(self, state):
         self.show_configuration(state)
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
-        config_obj.list_interactions_files = None #### Editing simulator
-        config_obj.list_events_files = None #### Editing simulator
         self.save_general_config(state,config_obj)
         self.save_data_files(state,config_obj)
 
         # config_obj = None # temp
         Utils.run_simulation_from_web(config_obj,state)
-
-        st.write("Sum of number of agents and worlds : ")
-        st.write("{0}".format(state.params['Agents']['Number of Agents']+state.params['General Configuration']['Worlds']))

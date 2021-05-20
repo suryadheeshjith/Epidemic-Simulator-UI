@@ -1,5 +1,5 @@
 from Utils.streamlit_utils import get_progress_UI_list
-from Utils.file_utils import files_checker, get_model_from_file, get_policy_from_file
+from Utils.file_utils import files_checker, get_model_from_file, get_policy_from_file, get_file_names_list
 import Simulator.World
 import streamlit as st
 
@@ -25,9 +25,11 @@ def run_simulation_from_web(config_obj,state):
         if(button):
             # User Model and Policy
             model = state.params['Model']['model']
-            print(state.params['Policy'])
             policy_list = []
             event_restriction_fn=state.params['Policy']['Event Restriction Function']
+
+            config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
+            config_obj.list_events_files = get_file_names_list(config_obj.events_files_list)
 
             # Simulation Run
             world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\

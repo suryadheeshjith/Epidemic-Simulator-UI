@@ -9,7 +9,7 @@ class UI_Environment(UI_Base):
     def get_defaults_dict(self, state):
         dict = {}
         dict['Agents'] = {'Number of Agents':300}
-        dict['Interactions'] = {'Interaction Graph':{'index':1, 'params':{'prob':0.01}}}
+        dict['Interactions'] = {'Interaction Graph':{'index':1, 'name': 'Random Graph','params':{'prob':0.01}}}
         dict['Locations'] = {}
         dict['Locations']['Number of Locations'] = 2
         dict['Locations'][0] = {'Name':'0'}
@@ -20,11 +20,11 @@ class UI_Environment(UI_Base):
         return dict
 
     def get_list_of_locations(self, dict):
-        s = set()
+        ls = []
         for i in range(dict['Number of Locations']):
-            if(dict[i]['Name']):
-                s.add(dict[i]['Name'])
-        return list(s)
+            if(dict[i]['Name'] and dict[i]['Name'] not in ls):
+                ls.append(dict[i]['Name'])
+        return ls
 
     def run(self, state):
         dict = state.params[self.name]
@@ -36,16 +36,19 @@ class UI_Environment(UI_Base):
         name_of_graph=st.selectbox("Select interaction graph",list_of_graphs,dict['Interactions']['Interaction Graph']['index'])
 
         if(name_of_graph == 'No Interactions'):
-            dict['Interaction Graph']['index'] = 0
-            dict['Interaction Graph']['params']={'prob':None}
+            dict['Interactions']['Interaction Graph']['index'] = 0
+            dict['Interactions']['Interaction Graph']['name'] = 'No Interactions'
+            dict['Interactions']['Interaction Graph']['params']['prob']=0.0
 
         elif(name_of_graph == 'Random Graph'):
-            dict['Interaction Graph']['index'] = 1
-            dict['Interaction Graph']['params']['prob'] = st.slider("Select probability of interaction",0.0,1.0,dict['Interaction Graph']['params']['prob'],0.01)
+            dict['Interactions']['Interaction Graph']['index'] = 1
+            dict['Interactions']['Interaction Graph']['name'] = 'Random Graph'
+            dict['Interactions']['Interaction Graph']['params']['prob'] = st.slider("Select probability of interaction",0.0,1.0,dict['Interactions']['Interaction Graph']['params']['prob'],0.01)
 
         elif(name_of_graph == 'Fully Connected Graph'):
-            dict['Interaction Graph']['index'] = 2
-            dict['Interaction Graph']['params']['prob'] = 1.0
+            dict['Interactions']['Interaction Graph']['index'] = 2
+            dict['Interactions']['Interaction Graph']['name'] = 'Fully Connected Graph'
+            dict['Interactions']['Interaction Graph']['params']['prob'] = 0.0
 
         st.markdown("#### Locations")
         dict['Locations']['Number of Locations'] = st.slider("Select number of locations",0,10,dict['Locations']['Number of Locations'],1)
@@ -67,7 +70,7 @@ class UI_Environment(UI_Base):
                 except:
                     dict['Events'][i] = {'Number of Agents':0, 'location_index':0}
                     cur_dict = dict['Events'][i]
-                cur_dict['Number of Agents'] = st.slider("Select number of agents",0,dict['Number of Agents'],cur_dict['Number of Agents'],1,key=i)
+                cur_dict['Number of Agents'] = st.slider("Select number of agents",0,dict['Agents']['Number of Agents'],cur_dict['Number of Agents'],1,key=i)
                 list_locations = self.get_list_of_locations(dict['Locations'])
                 try:
                     name_of_location=st.selectbox("Select location for Event"+str(i+1),list_locations,cur_dict['location_index'])

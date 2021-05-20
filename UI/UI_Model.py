@@ -115,9 +115,9 @@ class UI_Model(UI_Base):
             if cur_dict['depends_infectious']:
                 l=[]
                 for istate in infected_states:
-                    l.append(None)
+                    l.append(istate)
                     self.infectious_dict[istate] = cur_dict['infectious_rate'][istate]
-                model.set_transition(initial_state, final_state, model.p_infection(l,None))
+                model.set_transition(initial_state, final_state, model.p_infection(l,self.probabilityOfInfection_fn))
 
             else:
                 model.set_transition(initial_state, final_state, model.p_standard(cur_dict['normal_rate']))
@@ -133,11 +133,16 @@ class UI_Model(UI_Base):
 
         return model
 
-    def event_contribute_fn(agent,event_info,location,current_time_step):
+    def event_contribute_fn(self, agent,event_info,location,current_time_step):
             if agent.state in infected_states:
                 return self.infectious_dict[agent.state]
             return 0
 
-    def event_recieve_fn(agent,ambient_infection,event_info,location,current_time_step):
+    def event_recieve_fn(self, agent,ambient_infection,event_info,location,current_time_step):
         beta=0.1
         return ambient_infection*beta
+
+    def probabilityOfInfection_fn(self, p_infected_states_list,contact_agent,c_dict,current_time_step):
+    	if contact_agent.state in p_infected_states_list:
+    		return 0.1
+    	return 0
