@@ -3,6 +3,7 @@ from UI.UI import UI_Base
 
 class UI_Agents(UI_Base):
     def __init__(self):
+        super().__init__()
         self.name = 'UI_Agents'
 
     # def write_agents(self, filename,n):

@@ -3,6 +3,7 @@ from UI.UI import UI_Base
 
 class UI_Simulation_Config(UI_Base):
     def __init__(self):
+        super().__init__()
         self.name = 'UI_Simulation_Config'
 
     def get_defaults_dict(self):
