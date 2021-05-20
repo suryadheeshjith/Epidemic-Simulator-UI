@@ -6,15 +6,15 @@ class UI_Agents(UI_Base):
         super().__init__()
         self.name = 'Agents'
 
-    # def write_agents(self, filename,n):
-    #     header='Agent Index'
-    #
-    #     f=open(filename,'w')
-    #     f.write(str(n)+'\n')
-    #     f.write(header+'\n')
-    #
-    #     for i in range(n):
-    #         f.write(str(i)+'\n')
+    def write_agents(self, filename,n):
+        header='Agent Index'
+
+        f=open(filename,'w')
+        f.write(str(n)+'\n')
+        f.write(header+'\n')
+
+        for i in range(n):
+            f.write(str(i)+'\n')
 
     def get_defaults_dict(self):
         dict = {}

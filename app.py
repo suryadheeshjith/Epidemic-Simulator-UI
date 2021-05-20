@@ -1,7 +1,6 @@
 import streamlit as st
 import UI
 import Utils
-import Simulator.World
 
 def main():
 
@@ -35,23 +34,11 @@ def main():
             state.run_id += 1
 
         config_obj = Utils.get_uploaders(key=state.run_id)
-        st_list = Utils.get_progress_UI_list()
-
-        if(Utils.files_checker(config_obj)):
-            button = st.button("Click here to Run!")
-            if(button):
-                # User Model and Policy
-                model = Utils.get_model('')
-                policy_list, event_restriction_fn=Utils.get_policy('')
-
-                # Simulation Run
-                world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
-                config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
-                plt = world_obj.simulate_worlds()
-                st.pyplot(plt)
+        Utils.run_simulation(config_obj)
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
+        Utils.clear_files()
         st.markdown("""
             #### Use the sidebar to navigate through the different pages to set your simulation parameters.
             """)

@@ -1,6 +1,6 @@
 import streamlit as st
 import Simulator.ReadFile
-from Utils import write_to_file, get_file_names_list
+from Utils.file_utils import write_to_file, get_file_names_list
 
 def get_progress_UI_list():
 
