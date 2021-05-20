@@ -10,4 +10,4 @@ class UI_Results(UI_Base):
 
     def run(self, state):
         st.write("Sum of number of agents and worlds : ")
-        st.write("{0}".format(state.params['UI_Agents']['no_agents']+state.params['UI_Simulation_Config']['worlds']))
+        st.write("{0}".format(state.params['Agents']['no_agents']+state.params['General Configuration']['worlds']))

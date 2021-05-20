@@ -18,7 +18,6 @@ def main():
 
     input_options = ['Upload files (Recommended)', 'Input data on the Website']
     option = st.selectbox('Input Mode : ', input_options)
-    st.write("------------------------------------------------------------------------------------")
 
     # Session state
     state = Utils._get_state()
@@ -29,6 +28,7 @@ def main():
 
     # Options - Upload Files
     if(option=='Upload files (Recommended)'):
+        st.write("------------------------------------------------------------------------------------")
         clear_button = st.button("Click here to clear all files")
         if(clear_button):
             Utils.clear_files()
@@ -55,6 +55,7 @@ def main():
         st.markdown("""
             #### Use the sidebar to navigate through the different pages to set your simulation parameters.
             """)
+        st.write("------------------------------------------------------------------------------------")
         app = Utils.MultiPage()
         defaults = {}
 
