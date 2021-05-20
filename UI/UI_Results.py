@@ -19,20 +19,8 @@ class UI_Results(UI_Base):
     def run(self, state):
         self.show_configuration(state)
 
-        st_list = Utils.get_progress_UI_list()
-        button = st.button("Click to Run!")
-        if(Utils.files_checker(config_obj)):
-            if(button):
-
-                # User Model and Policy
-                model = Utils.get_model('')
-                policy_list, event_restriction_fn=Utils.get_policy('')
-
-                # Simulation Run
-                world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
-                config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
-                plt = world_obj.simulate_worlds()
-                st.pyplot(plt)
+        config_obj = None # temp
+        Utils.run_simulation(config_obj)
 
         st.write("Sum of number of agents and worlds : ")
         st.write("{0}".format(state.params['Agents']['no_agents']+state.params['General Configuration']['worlds']))
