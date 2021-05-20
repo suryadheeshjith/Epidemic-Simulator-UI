@@ -1,5 +1,5 @@
 import streamlit as st
-from UI.MultiPage import save
+from UI.UI import UI_Base
 
 def generate_policy():
 	policy_list=[]

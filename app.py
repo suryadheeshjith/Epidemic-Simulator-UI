@@ -1,39 +1,9 @@
 import streamlit as st
 import UI
+import Utils
 import Simulator.World
-import os.path as osp
-import importlib.util
-import logging
-from os import listdir
-from os.path import isfile, join
-onlyfiles = [f for f in listdir('.') if isfile(join('', f))]
-strin = ','.join(onlyfiles)
-logging.warning(strin)
 
-def module_from_file(module_name, file_path):
-    spec = importlib.util.spec_from_file_location(module_name, file_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-def get_model(example_path):
-    UserModel = module_from_file("Generate_model", osp.join(example_path,'UserModel.py'))
-    model = UserModel.UserModel()
-    return model
-
-def get_policy(example_path):
-    Generate_policy = module_from_file("Generate_policy", osp.join(example_path,'Generate_policy.py'))
-    policy_list, event_restriction_fn=Generate_policy.generate_policy()
-    return policy_list, event_restriction_fn
-
-
-if __name__ == "__main__":
-
-    # Session state
-    session = UI.get_session_state(first_run=True,run_id=0)
-    if(session.first_run):
-        session.first_run = False
-        UI.clear_files()
+def main():
 
     st.write("""
     # Welcome to our Epidemic Simulator!
@@ -46,49 +16,56 @@ if __name__ == "__main__":
     the simulator has to offer. Inputting data through the website will only have limited capability.
     """)
 
-    input_options = ['Upload files', 'Input data on the Website']
+    input_options = ['Upload files (Recommended)', 'Input data on the Website']
     option = st.selectbox('Input Mode : ', input_options)
     st.write("------------------------------------------------------------------------------------")
-    if(option=='Upload files'):
 
+    # Session state
+    state = Utils._get_state()
+    state(first_run=True, run_id=0)
+    if(state.first_run):
+        state.first_run = False
+        Utils.clear_files()
+
+    # Options - Upload Files
+    if(option=='Upload files (Recommended)'):
         clear_button = st.button("Click here to clear all files")
         if(clear_button):
-            UI.clear_files()
-            session.run_id += 1
+            Utils.clear_files()
+            state.run_id += 1
 
-        config_obj = UI.get_uploaders(key=session.run_id)
+        config_obj = Utils.get_uploaders(key=state.run_id)
+        st_list = Utils.get_progress_UI_list()
 
-        st_list = UI.get_progress_UI_list()
-
-        if(not config_obj):
-            st.write("Begin by uploading the config.txt file")
-
-        elif(UI.files_checker(config_obj)):
+        if(Utils.files_checker(config_obj)):
             button = st.button("Click here to Run!")
             if(button):
-
-                example_path = ''
-
                 # User Model and Policy
-                model = get_model(example_path)
-                policy_list, event_restriction_fn=get_policy(example_path)
+                model = Utils.get_model('')
+                policy_list, event_restriction_fn=Utils.get_policy('')
 
-                # Creation of World object
+                # Simulation Run
                 world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
                 config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
                 plt = world_obj.simulate_worlds()
                 st.pyplot(plt)
 
-
+    # Options - Input through website
     elif(option == 'Input data on the Website'):
-        UI.clear_files()
-        app = UI.MultiPage()
-        app.navbar_name = "Navigation"
-        app.next_page_button = "Next Page"
-        app.previous_page_button = "Previous Page"
-        app.add_app("Simulation Configuration", UI.UI_Simulation_Config)
-        app.add_app("Agents", UI.UI_Agents)
-        app.add_app("Model", UI.UI_Model)
-        app.add_app("Events", UI.UI_Events)
-        app.add_app("Results", UI.UI_Results)
-        app.run()
+        app = Utils.MultiPage()
+        defaults = {}
+
+        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Agents(), UI.UI_Results()]
+
+        for page_obj in all_pages_objects:
+            name = page_obj.name
+            defaults[name] = app.add_page(page_obj)
+
+        state(params=defaults)
+        app.execute_app(state)
+
+    state.sync()
+
+
+if __name__ == "__main__":
+    main()

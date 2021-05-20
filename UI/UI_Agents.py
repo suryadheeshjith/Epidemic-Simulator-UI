@@ -1,20 +1,27 @@
 import streamlit as st
-from UI.MultiPage import save
+from UI.UI import UI_Base
 
-def UI_Agents(prev_vars):
-	def write_agents(filename,n):
-		header='Agent Index'
+class UI_Agents(UI_Base):
+    def __init__(self):
+        self.name = 'UI_Agents'
 
-		f=open(filename,'w')
-		f.write(str(n)+'\n')
-		f.write(header+'\n')
+    # def write_agents(self, filename,n):
+    #     header='Agent Index'
+    #
+    #     f=open(filename,'w')
+    #     f.write(str(n)+'\n')
+    #     f.write(header+'\n')
+    #
+    #     for i in range(n):
+    #         f.write(str(i)+'\n')
 
-		for i in range(n):
-			f.write(str(i)+'\n')
+    def get_defaults_dict(self):
+        dict = {}
+        dict['no_agents'] = 300
+        return dict
 
-	config_obj = prev_vars[0]
-	file_name = 'agents.txt'
-	config_obj.agents_filename = file_name
-	no_agents=st.slider("Select number of agents", min_value=0 , max_value=1000 , value=300 , step=10 , format=None , key=None )
-	write_agents(config_obj.agents_filename,no_agents)
-	save(var_list=[config_obj,no_agents], name="Agents", page_names=["Events"])
+    def run(self, state):
+        # file_name = 'agents.txt'
+        # config_obj.agents_filename = file_name
+        state.params[self.name]['no_agents']=st.slider("Select number of agents",0,1000,state.params[self.name]['no_agents'],10)
+        # write_agents(config_obj.agents_filename,no_agents)

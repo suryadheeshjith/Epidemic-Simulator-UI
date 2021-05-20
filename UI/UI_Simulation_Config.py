@@ -1,9 +1,16 @@
 import streamlit as st
-from UI.MultiPage import save
+from UI.UI import UI_Base
 
-def UI_Simulation_Config():
+class UI_Simulation_Config(UI_Base):
+    def __init__(self):
+        self.name = 'UI_Simulation_Config'
 
-    days=st.slider("Select number of days", min_value=1 , max_value=200 , value=100 , step=1 , format=None , key=None )
-    worlds=st.slider("Select number of worlds", min_value=1 , max_value=30 , value=5 , step=1 , format=None , key=None )
+    def get_defaults_dict(self):
+        dict = {}
+        dict['days'] = 30
+        dict['worlds'] = 1
+        return dict
 
-    save(var_list=[days,worlds], name="Simulation Configuration", page_names=["Agents"])
+    def run(self, state):
+        state.params[self.name]['days']=st.slider("Select number of days",1,200,state.params[self.name]['days'],1)
+        state.params[self.name]['worlds']=st.slider("Select number of worlds",1,30,state.params[self.name]['worlds'],1)

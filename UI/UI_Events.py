@@ -1,25 +1,28 @@
 import streamlit as st
-from UI.MultiPage import save
+from UI.UI import UI_Base
 
-def UI_Events(prev_vars):
-	def write_events(filename,no_locations,no_agents):
-		info_dict={}
-		#ID enumerates from 0 to n-1
-		header='Location Index:Agents'
+class UI_Events(UI_Base):
+    def __init__(self):
+        pass
 
-		f=open(filename,'w')
-		f.write(str(1)+'\n')
-		f.write(header+'\n')
+    def run(self,state):
+        events_fileslist_filename = "all_events.txt"
+        events_list = []
+        write_events('one_event.txt',1,no_agents)
 
-		line=str(0)+':'
-		for i in range(no_agents):
-			line+=str(i)
-			if i!=no_agents-1:
-				line+=','
+    def write_events(filename,no_locations,no_agents):
+        info_dict={}
+        #ID enumerates from 0 to n-1
+        header='Location Index:Agents'
 
-		f.write(line)
+        f=open(filename,'w')
+        f.write(str(1)+'\n')
+        f.write(header+'\n')
 
-	no_agents = prev_vars[1]
-	events_fileslist_filename = "all_events.txt"
-	events_list = []
-	write_events('one_event.txt',1,no_agents)
+        line=str(0)+':'
+        for i in range(no_agents):
+            line+=str(i)
+            if i!=no_agents-1:
+                line+=','
+
+        f.write(line)
