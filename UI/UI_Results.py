@@ -90,4 +90,7 @@ class UI_Results(UI_Base):
         flag = self.save_data_files(state.params['Environment'],config_obj)
 
         if(flag):
-            Utils.run_simulation_from_web(config_obj,state)
+            try:
+                Utils.run_simulation_from_web(config_obj,state)
+            except Exception as e:
+                st.error(e)

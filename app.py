@@ -34,7 +34,10 @@ def main():
             state.run_id += 1
 
         config_obj = Utils.get_uploaders(key=state.run_id)
-        Utils.run_simulation_from_upload(config_obj)
+        try:
+            Utils.run_simulation_from_upload(config_obj)
+        except Exception as e:
+            st.error(e)
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
@@ -45,7 +48,7 @@ def main():
         app = Utils.MultiPage()
         defaults = {}
 
-        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Environment(), UI.UI_Model(), UI.UI_Policy(), UI.UI_Results()] 
+        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Environment(), UI.UI_Model(), UI.UI_Policy(), UI.UI_Results()]
 
         for page_obj in all_pages_objects:
             name = page_obj.name
