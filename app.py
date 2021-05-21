@@ -37,10 +37,8 @@ def main():
             state.run_id += 1
 
         config_obj = Utils.get_uploaders(key=state.run_id)
-        try:
-            Utils.run_simulation_from_upload(config_obj)
-        except Exception as e:
-            st.error(e)
+
+        Utils.run_simulation_from_upload(config_obj)
 
     # Options - Input through website
     elif(option == 'Input data on the Website'):
@@ -67,4 +65,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        st.error(e)
