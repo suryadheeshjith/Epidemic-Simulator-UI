@@ -83,7 +83,7 @@ def get_interaction_files_uploaders(config_obj):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, config_obj.interactions_files_list)
             config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
-            for file_name in config_obj.list_interactions_files:
+            for file_name in config_obj.list_interactions_files: 
                 f = st.file_uploader("Upload File name : {0}".format(file_name))
                 if(f is not None):
                     if(f.name == file_name):
