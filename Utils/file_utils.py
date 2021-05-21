@@ -156,6 +156,12 @@ def get_file_names_list(fileslist_filename):
 ####################################################################
 # File checking
 
+def check_single_file(filename):
+    if(not osp.isfile(filename)):
+        st.write("Please upload ",filename,"!")
+        return False
+    return True
+
 def files_checker(config_obj):
 
     if(not config_obj):
@@ -166,41 +172,33 @@ def files_checker(config_obj):
         st.write("config.txt file has not been uploaded correctly!")
         return False
 
-    if(not osp.isfile(config_obj.agents_filename)):
-        st.write("Please upload the agents file specified in config.txt!")
+    if(not check_single_file(config_obj.agents_filename)):
         return False
 
-    if(not osp.isfile('UserModel.py')):
-        st.write("Please upload UserModel.py!")
+    if(not check_single_file('UserModel.py')):
         return False
 
-    if(not osp.isfile('Generate_policy.py')):
-        st.write("Please upload Generate_policy.py!")
+    if(not check_single_file('Generate_policy.py')):
         return False
 
     if(config_obj.locations_filename):
-        if(not osp.isfile(config_obj.locations_filename)):
-            st.write("Please upload the locations file specified in config.txt!")
+        if(not check_single_file(config_obj.locations_filename)):
             return False
 
     if(config_obj.interactions_files_list):
-        if(not osp.isfile(config_obj.interactions_files_list)):
-            st.write("Please upload the interactions list file specified in config.txt!")
+        if(not check_single_file(config_obj.interactions_files_list)):
             return False
         else:
             for file in config_obj.list_interactions_files:
-                if(not osp.isfile(file)):
-                    st.write("Please upload the individual interactions file specified in your interactions files list!")
+                if(not check_single_file(file)):
                     return False
 
     if(config_obj.events_files_list):
-        if(not osp.isfile(config_obj.events_files_list)):
-            st.write("Please upload the events list file specified in config.txt!")
+        if(not check_single_file(config_obj.events_files_list)):
             return False
         else:
             for file in config_obj.list_events_files:
-                if(not osp.isfile(file)):
-                    st.write("Please upload the individual events file specified in your events files list!")
+                if(not check_single_file(file)):
                     return False
 
     return True

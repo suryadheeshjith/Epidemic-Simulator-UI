@@ -8,8 +8,10 @@ class UI_Environment(UI_Base):
 
     def get_defaults_dict(self, state):
         dict = {}
-        dict['Agents'] = {'Number of Agents':300}
-        dict['Interactions'] = {'Interaction Graph':{'index':1, 'name': 'Random Graph','params':{'prob':0.01}}}
+        dict['Agents'] = {}
+        dict['Agents']['Number of Agents'] = 300
+        dict['Interactions'] = {}
+        dict['Interactions']['Interaction Graph'] = {'index':1, 'name': 'Random Graph','params':{'prob':0.01}}
         dict['Locations'] = {}
         dict['Locations']['Number of Locations'] = 2
         dict['Locations'][0] = {'Name':'0'}
