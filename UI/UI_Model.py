@@ -130,12 +130,12 @@ class UI_Model(UI_Base):
         self.set_transitions(model,dict,infected_states)
         model.set_event_contribution_fn(self.event_contribute_fn)
         model.set_event_recieve_fn(self.event_recieve_fn)
-
+        self.infected_states = infected_states #Hacky
         return model
 
     def event_contribute_fn(self, agent,event_info,location,current_time_step):
-            if agent.state in infected_states:
-                return self.infectious_dict[agent.state]
+            if agent.state in self.infected_states:#Hacky
+                return 1
             return 0
 
     def event_recieve_fn(self, agent,ambient_infection,event_info,location,current_time_step):
@@ -143,6 +143,6 @@ class UI_Model(UI_Base):
         return ambient_infection*beta
 
     def probabilityOfInfection_fn(self, p_infected_states_list,contact_agent,c_dict,current_time_step):
-    	if contact_agent.state in p_infected_states_list:
-    		return 0.1
-    	return 0
+        if contact_agent.state in p_infected_states_list:
+            return self.infectious_dict[contact_agent.state]
+        return 0

@@ -49,6 +49,9 @@ def save_agents_file(dict, config_obj):
 
 def save_locations_file(dict, config_obj):
 
+    if(dict['Number of Locations']<=0):
+        return
+
     path = "web_locations.txt"
     header = "Location Index"
 
@@ -62,6 +65,9 @@ def save_locations_file(dict, config_obj):
     config_obj.locations_filename = path
 
 def save_interactions_file(dict, config_obj, n):
+
+    if(n==0 or dict['Interaction Graph']['name']=='No Interactions'):
+        return
 
     list_path = "web_list_interactions.txt"
     single_path = "web_single_interaction.txt"
@@ -91,6 +97,45 @@ def save_interactions_file(dict, config_obj, n):
     config_obj.interaction_info_keys = header
     config_obj.interactions_files_list = list_path
 
+
+def save_events_file(dict, config_obj, n):
+
+    if(config_obj.locations_filename is None or n==0 or dict['Number of Events']<=0):
+        return
+
+    list_path = "web_list_events.txt"
+    single_path = "web_single_event.txt"
+    string = "<"+single_path+">"
+
+    header = "Location Index:Agents"
+
+
+    total_agents = list(range(n))
+
+    num_events =0
+    string2 =""
+    for i in range(dict['Number of Events']):
+        num = dict[i]['Number of Agents']
+        name = dict[i]['Name']
+        if(num>0):
+            num_events+=1
+        elif(num==0):
+            continue
+
+        agents_list = random.sample(total_agents, min(num,n))
+        agents_list_str = [str(num) for num in agents_list]
+        string2 +=name+':'+','.join(agents_list_str)+'\n'
+
+    string1 = str(dict['Number of Events'])+'\n'
+    string1 += header+'\n'
+    if(num_events>0):
+        string1 = str(num_events)+'\n'
+        string1 += header+'\n'
+        string1 += string2
+        write_to_file(string,list_path)
+        write_to_file(string1,single_path)
+        config_obj.event_info_keys = header
+        config_obj.events_files_list = list_path
 
 ####################################################################
 # Retrieve list from file with list of filenames

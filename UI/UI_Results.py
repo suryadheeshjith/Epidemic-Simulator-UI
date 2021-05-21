@@ -27,19 +27,17 @@ class UI_Results(UI_Base):
 
         # Locations
         dict = state.params['Environment']['Locations']
-        if(dict['Number of Locations']>0):
-            Utils.save_locations_file(dict, config_obj)
+        Utils.save_locations_file(dict, config_obj)
 
         # Interactions
-        if(state.params['Environment']['Agents']['Number of Agents']!=0):
-            dict = state.params['Environment']['Interactions']
-            if(dict['Interaction Graph']['name']!='No Interactions'):
-                Utils.save_interactions_file(dict, config_obj, state.params['Environment']['Agents']['Number of Agents'])
+        agent_dict = state.params['Environment']['Agents']
+        dict = state.params['Environment']['Interactions']
+        Utils.save_interactions_file(dict, config_obj, agent_dict['Number of Agents'])
 
         # Events
-        # dict = state.params['Environment']['Locations']
-        # if(dict['Number of Locations']>0)
-        #     Utils.save_locations_file(dict, config_obj)
+        agent_dict = state.params['Environment']['Agents']
+        dict = state.params['Environment']['Events']
+        Utils.save_events_file(dict, config_obj, agent_dict['Number of Agents'])
 
 
     def run(self, state):
