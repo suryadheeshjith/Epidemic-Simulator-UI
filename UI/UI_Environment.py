@@ -59,12 +59,12 @@ class UI_Environment(UI_Base):
                 write_to_file(string, file.name)
                 cur_dict['Input Mode']['filename'] = file.name
             if(cur_dict['Input Mode']['filename']):
-                st.markdown("Saved {0}!".format(cur_dict['Input Mode']['filename']))
+                st.info("Saved {0}!".format(cur_dict['Input Mode']['filename']))
 
     def run_interactions(self, dict, input_options):
         st.markdown("#### Interactions")
         if(dict['Agents']['Number of Agents']==0):
-            st.markdown("There are no agents!")
+            st.info("There are no agents!")
         else:
             cur_dict = dict['Interactions']
             option = st.radio("Choose input mode", input_options, cur_dict['Input Mode']['index'], key = "Interactions")
@@ -101,9 +101,9 @@ class UI_Environment(UI_Base):
                     write_to_file(string, file.name)
                     cur_dict['Input Mode']['list_filename'] = file.name
                     list_interactions_files = get_file_names_list(file.name)
-                    
+
                     if(not list_interactions_files):
-                        st.write("Could not read any interaction files!")
+                        st.error("Could not read any interaction files!")
                         cur_dict['Input Mode']['list_filename'] = None
                         cur_dict['Input Mode']['single_filenames'] = []
                     else:
@@ -117,15 +117,15 @@ class UI_Environment(UI_Base):
                                 write_to_file(string, file_name)
                                 cur_dict['Input Mode']['single_filenames'].append(f.name)
                             else:
-                                st.write("""
-                                        Given File : {0} ; Required File : {1}
+                                st.error("""
+                                        Given File : {0}  Required File : {1}
                                         """.format(f.name,file_name))
 
                 if(cur_dict['Input Mode']['list_filename']):
-                    st.markdown("Saved {0}!".format(cur_dict['Input Mode']['list_filename']))
+                    st.info("Saved {0}!".format(cur_dict['Input Mode']['list_filename']))
 
                 if(cur_dict['Input Mode']['single_filenames']):
-                    st.markdown("Saved {0}!".format(set(cur_dict['Input Mode']['single_filenames'])))
+                    st.info("Saved {0}!".format(set(cur_dict['Input Mode']['single_filenames'])))
 
     def run_locations(self,dict,input_options):
         st.markdown("#### Locations")
@@ -157,14 +157,14 @@ class UI_Environment(UI_Base):
                 write_to_file(string, file.name)
                 cur_dict['Input Mode']['filename'] = file.name
             if(cur_dict['Input Mode']['filename']):
-                st.markdown("Saved {0}!".format(cur_dict['Input Mode']['filename']))
+                st.info("Saved {0}!".format(cur_dict['Input Mode']['filename']))
 
     def run_events(self,dict,input_options):
         st.markdown("#### Events")
         if(dict['Agents']['Number of Agents']==0):
-            st.markdown("There are no agents!")
+            st.info("There are no agents!")
         elif(dict['Locations']['Number of Locations']==0):
-            st.markdown("Add Locations to add Events!")
+            st.info("Add Locations to add Events!")
         else:
             cur_dict = dict['Events']
             option = st.radio("Choose input mode", input_options, cur_dict['Input Mode']['index'], key = "Events")
@@ -203,7 +203,7 @@ class UI_Environment(UI_Base):
                     list_events_files = get_file_names_list(file.name)
 
                     if(not list_events_files):
-                        st.write("Could not read any event files!")
+                        st.error("Could not read any event files!")
                         cur_dict['Input Mode']['list_filename'] = None
                         cur_dict['Input Mode']['single_filenames'] = []
                     else:
@@ -217,12 +217,12 @@ class UI_Environment(UI_Base):
                                 write_to_file(string, file_name)
                                 cur_dict['Input Mode']['single_filenames'].append(f.name)
                             else:
-                                st.write("""
-                                        Given File : {0} ; Required File : {1}
+                                st.error("""
+                                        Given File : {0}  Required File : {1}
                                         """.format(f.name,file_name))
 
                 if(cur_dict['Input Mode']['list_filename']):
-                    st.markdown("Saved {0}!".format(cur_dict['Input Mode']['list_filename']))
+                    st.info("Saved {0}!".format(cur_dict['Input Mode']['list_filename']))
 
                 if(cur_dict['Input Mode']['single_filenames']):
-                    st.markdown("Saved {0}!".format(set(cur_dict['Input Mode']['single_filenames'])))
+                    st.info("Saved {0}!".format(set(cur_dict['Input Mode']['single_filenames'])))

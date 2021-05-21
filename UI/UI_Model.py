@@ -62,13 +62,13 @@ class UI_Model(UI_Base):
                     write_to_file(string, file.name)
                     dict['Input Mode']['filename'] = file.name
                 else:
-                    st.write("""
-                            Given File : {0} ; Required File : {1}
+                    st.error("""
+                            Given File : {0}  Required File : {1}
                             """.format(file.name,"UserModel.py"))
                     dict['Input Mode']['filename'] = None
 
             if(dict['Input Mode']['filename']):
-                st.markdown("Saved {0}!".format(dict['Input Mode']['filename']))
+                st.info("Saved {0}!".format(dict['Input Mode']['filename']))
 
             if(dict['Input Mode']['filename'] == "UserModel.py"):
                 dict['model'] = get_model_from_file('')

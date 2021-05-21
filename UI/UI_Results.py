@@ -11,11 +11,56 @@ class UI_Results(UI_Base):
         self.requires_reset = False
 
     def show_configuration(self, state):
-        for i, key in enumerate(state.params.keys()):
-            if(i!=len(state.params)-1):
+        # for i, key in enumerate(state.params.keys()):
+        #     if(i!=len(state.params)-1):
+        #         st.markdown("#### {0}".format(key))
+        #         for inner_key in state.params[key]:
+        #             st.markdown("{0} : {1}".format(inner_key,state.params[key][inner_key]))
+
+        for key in state.params.keys():
+
+            if(key=="General Configuration"):
                 st.markdown("#### {0}".format(key))
-                for inner_key in state.params[key]:
-                    st.markdown("{0} : {1}".format(inner_key,state.params[key][inner_key]))
+                st.markdown("Days : {0}".format(state.params[key]['Days']))
+                st.markdown("Worlds : {0}".format(state.params[key]['Worlds']))
+
+            if(key=="Environment"):
+                st.markdown("#### {0}".format(key))
+                st.markdown("<ins>Agents</ins>", unsafe_allow_html=True)
+                if(state.params[key]['Agents']['Input Mode']['index']==0):
+                    st.markdown("Number of Agents : {0}".format(state.params[key]['Agents']['Number of Agents']))
+                st.markdown("Type of Input for Agents : {0}".format(state.params[key]['Agents']['Input Mode']['name']))
+
+                st.markdown("<ins>Interactions</ins>", unsafe_allow_html=True)
+                if(state.params[key]['Interactions']['Input Mode']['index']==0):
+                    st.markdown("Interaction Type : {0}".format(state.params[key]['Interactions']['Interaction Graph']['name']))
+                st.markdown("Type of Input for Interactions : {0}".format(state.params[key]['Interactions']['Input Mode']['name']))
+
+                st.markdown("<ins>Locations</ins>", unsafe_allow_html=True)
+                if(state.params[key]['Locations']['Input Mode']['index']==0):
+                    st.markdown("Number of Locations : {0}".format(state.params[key]['Locations']['Number of Locations']))
+                st.markdown("Type of Input for Locations : {0}".format(state.params[key]['Locations']['Input Mode']['name']))
+
+                st.markdown("<ins>Events</ins>", unsafe_allow_html=True)
+                if(state.params[key]['Events']['Input Mode']['index']==0):
+                    st.markdown("Number of Events : {0}".format(state.params[key]['Events']['Number of Events']))
+                st.markdown("Type of Input for Events : {0}".format(state.params[key]['Events']['Input Mode']['name']))
+
+            if(key=="Model"):
+                st.markdown("#### {0}".format(key))
+                if(state.params[key]['Input Mode']['index']==0):
+                    st.markdown("Number of Compartments : {0}".format(state.params[key]['Number of compartments']))
+                    st.markdown("Number of Transitions : {0}".format(state.params[key]['Number of transitions']))
+
+                    for i in range(state.params[key]['Number of compartments']):
+                        name = state.params[key]['compartments'][i]['name']
+                        st.markdown("Compartment {0} : {1}".format(i+1,name))
+                st.markdown("Type of Input for the Model : {0}".format(state.params[key]['Input Mode']['name']))
+
+            # if(key=="Policy"):
+            #     st.markdown("#### {0}".format(key))
+                # st.markdown("Type of Input for the Policy : {0}".format(state.params[key]['Input Mode']['name']))
+
 
     def save_general_config(self,dict,config_obj):
         config_obj.worlds = dict['Worlds']
@@ -34,7 +79,7 @@ class UI_Results(UI_Base):
                 config_obj.agent_info_keys = get_info_keys(path)
                 config_obj.agents_filename = path
             else:
-                st.markdown("No Agent file has been uploaded! Please check your environment again!")
+                st.error("No Agent file has been uploaded! Please check your environment again!")
                 return False
 
         # Locations
@@ -48,7 +93,7 @@ class UI_Results(UI_Base):
                 config_obj.location_info_keys = get_info_keys(path)
                 config_obj.locations_filename = path
             else:
-                st.markdown("No Location file has been uploaded! Please check your environment again!")
+                st.error("No Location file has been uploaded! Please check your environment again!")
                 return False
 
         # Interactions
@@ -62,7 +107,7 @@ class UI_Results(UI_Base):
                 config_obj.interaction_info_keys = get_info_keys(path)
                 config_obj.interactions_files_list = list_path
             else:
-                st.markdown("No Interaction files have been uploaded! Please check your environment again!")
+                st.error("No Interaction files have been uploaded! Please check your environment again!")
                 return False
 
         # Events
@@ -76,7 +121,7 @@ class UI_Results(UI_Base):
                 config_obj.event_info_keys = get_info_keys(path)
                 config_obj.events_files_list = list_path
             else:
-                st.markdown("No Event files have been uploaded! Please check your environment again!")
+                st.error("No Event files have been uploaded! Please check your environment again!")
                 return False
 
         return True

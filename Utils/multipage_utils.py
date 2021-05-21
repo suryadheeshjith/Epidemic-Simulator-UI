@@ -12,8 +12,8 @@ class MultiPage():
     def execute_app(self, state):
         st.sidebar.markdown("# :hammer_and_pick: Navigation")
         radio = st.sidebar.radio("",list(self.pages.keys()))
-        str_header = "### "+self.pages[radio].name
-        st.markdown(str_header)
+        str_header = "### <ins>"+self.pages[radio].name + "</ins>"
+        st.markdown(str_header, unsafe_allow_html=True)
         self.pages[radio].run(state)
         if(self.pages[radio].requires_reset):
             button = st.button("Reset to defaults")

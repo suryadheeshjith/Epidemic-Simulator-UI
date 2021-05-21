@@ -168,18 +168,18 @@ def get_file_names_list(fileslist_filename):
 
 def check_single_file(filename):
     if(not osp.isfile(filename)):
-        st.write("Please upload ",filename,"!")
+        st.info("Please upload {0}!".format(filename))
         return False
     return True
 
 def files_checker(config_obj):
 
     if(not config_obj):
-        st.write("Begin by uploading the config.txt file")
+        st.info("Begin by uploading the config.txt file")
         return False
 
     if(not osp.isfile('config.txt')):
-        st.write("config.txt file has not been uploaded correctly!")
+        st.info("config.txt file has not been uploaded correctly!")
         return False
 
     if(not check_single_file(config_obj.agents_filename)):
@@ -191,10 +191,6 @@ def files_checker(config_obj):
     if(not check_single_file('Generate_policy.py')):
         return False
 
-    if(config_obj.locations_filename):
-        if(not check_single_file(config_obj.locations_filename)):
-            return False
-
     if(config_obj.interactions_files_list):
         if(not check_single_file(config_obj.interactions_files_list)):
             return False
@@ -202,6 +198,10 @@ def files_checker(config_obj):
             for file in config_obj.list_interactions_files:
                 if(not check_single_file(file)):
                     return False
+
+    if(config_obj.locations_filename):
+        if(not check_single_file(config_obj.locations_filename)):
+            return False
 
     if(config_obj.events_files_list):
         if(not check_single_file(config_obj.events_files_list)):

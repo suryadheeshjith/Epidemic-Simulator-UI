@@ -26,8 +26,8 @@ def get_config_file_uploader(key):
             config_obj.list_interactions_files = None #### Editing simulator
             config_obj.list_events_files = None #### Editing simulator
         else:
-            st.write("""
-                    Given File : {0} ; Required File : config.txt
+            st.error("""
+                    Given File : {0}  Required File : config.txt
                     """.format(file.name))
 
     return config_obj
@@ -39,8 +39,8 @@ def get_agents_file_uploader(config_obj):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, config_obj.agents_filename)
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,config_obj.agents_filename))
 
 def get_model_file_uploader():
@@ -50,8 +50,8 @@ def get_model_file_uploader():
             string = file.getvalue().decode("utf-8")
             write_to_file(string, "UserModel.py")
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,"UserModel.py"))
 
 def get_policy_file_uploader():
@@ -61,8 +61,8 @@ def get_policy_file_uploader():
             string = file.getvalue().decode("utf-8")
             write_to_file(string, "Generate_policy.py")
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,"Generate_policy.py"))
 
 def get_location_file_uploader(config_obj):
@@ -72,14 +72,14 @@ def get_location_file_uploader(config_obj):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, config_obj.locations_filename)
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,config_obj.locations_filename))
 
 def get_interaction_files_uploaders(config_obj):
     file = st.file_uploader("Upload Interactions list file")
     if(file is not None):
-        if(file.name == config_obj.agents_filename):
+        if(file.name == config_obj.interactions_files_list):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, config_obj.interactions_files_list)
             config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
@@ -90,12 +90,12 @@ def get_interaction_files_uploaders(config_obj):
                         string = f.getvalue().decode("utf-8")
                         write_to_file(string, file_name)
                     else:
-                        st.write("""
-                                Given File : {0} ; Required File : {1}
+                        st.error("""
+                                Given File : {0}  Required File : {1}
                                 """.format(f.name,file_name))
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,config_obj.interactions_files_list))
 
 
@@ -113,12 +113,12 @@ def get_event_files_uploaders(config_obj):
                         string = f.getvalue().decode("utf-8")
                         write_to_file(string, file_name)
                     else:
-                        st.write("""
-                                Given File : {0} ; Required File : {1}
+                        st.error("""
+                                Given File : {0}  Required File : {1}
                                 """.format(f.name,file_name))
         else:
-            st.write("""
-                    Given File : {0} ; Required File : {1}
+            st.error("""
+                    Given File : {0}  Required File : {1}
                     """.format(file.name,config_obj.events_files_list))
 
 

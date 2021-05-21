@@ -27,6 +27,9 @@ def main():
 
     # Options - Upload Files
     if(option=='Upload files (Recommended)'):
+        st.markdown("""
+            To use some pre-built examples, download some from [here](https://github.com/healthbadge/episimmer/tree/master/examples) and run the simulator.
+            """)
         st.write("---")
         clear_button = st.button("Click here to clear all files")
         if(clear_button):
@@ -42,7 +45,7 @@ def main():
     # Options - Input through website
     elif(option == 'Input data on the Website'):
         st.markdown("""
-            #### Use the sidebar to navigate through the different pages to set your simulation parameters.
+            Use the sidebar to navigate through the different pages to set your simulation parameters.
             """)
         st.write("---")
         app = Utils.MultiPage()
