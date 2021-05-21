@@ -45,7 +45,7 @@ def main():
         app = Utils.MultiPage()
         defaults = {}
 
-        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Environment(), UI.UI_Model(), UI.UI_Policy(), UI.UI_Results()]
+        all_pages_objects = [UI.UI_Simulation_Config(), UI.UI_Environment(), UI.UI_Model(), UI.UI_Policy(), UI.UI_Results()] 
 
         for page_obj in all_pages_objects:
             name = page_obj.name
