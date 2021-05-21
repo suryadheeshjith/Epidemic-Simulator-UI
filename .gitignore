@@ -7,3 +7,9 @@ UserModel.py
 Generate_policy.py
 Data/dummy_config.txt
 create_config_pickle.py
+web_agents.txt
+web_list_events.txt
+web_list_interactions.txt
+web_locations.txt
+web_single_event.txt
+web_single_interaction.txt
