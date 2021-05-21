@@ -32,6 +32,16 @@ def get_start_config(filename):
         config_obj = pickle.load(input)
     return config_obj
 
+def get_value(line):
+    if line.endswith('\n'):
+        line=line[:-1]
+    return line
+
+def get_info_keys(filename):
+    f=open(filename,'r')
+    f.readline()
+    info_keys=get_value(f.readline())
+    return info_keys
 
 def save_agents_file(dict, config_obj):
     path = "web_agents.txt"

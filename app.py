@@ -7,7 +7,7 @@ def main():
     st.markdown("""
     # :chart_with_upwards_trend: Welcome to our Epidemic Simulator!
     """)
-    st.write("------------------------------------------------------------------------------------")
+    st.write("---")
 
     st.write("The implementation of this simulator is based on the [Episimmer](https://github.com/healthbadge/episimmer) simulator.")
     st.write("""
@@ -27,7 +27,7 @@ def main():
 
     # Options - Upload Files
     if(option=='Upload files (Recommended)'):
-        st.write("------------------------------------------------------------------------------------")
+        st.write("---")
         clear_button = st.button("Click here to clear all files")
         if(clear_button):
             Utils.clear_files()
@@ -41,7 +41,7 @@ def main():
         st.markdown("""
             #### Use the sidebar to navigate through the different pages to set your simulation parameters.
             """)
-        st.write("------------------------------------------------------------------------------------")
+        st.write("---")
         app = Utils.MultiPage()
         defaults = {}
 

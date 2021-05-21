@@ -6,7 +6,9 @@ import streamlit as st
 import Simulator.ReadFile
 import Simulator.World
 import Simulator.Model as Model
+from Utils.file_utils import get_model_from_file, write_to_file
 from UI.UI import UI_Base
+
 
 class UI_Model(UI_Base):
     def __init__(self):
@@ -15,6 +17,7 @@ class UI_Model(UI_Base):
 
     def get_defaults_dict(self, state):
         dict = {}
+        dict['Input Mode'] = {'index':0, 'name':'Website', 'filename':None}
         dict['Number of compartments'] = 3
         dict['Number of transitions'] = 2
         dict['compartments'] = {}
@@ -29,21 +32,58 @@ class UI_Model(UI_Base):
 
 
     def run(self, state):
-        state.params[self.name]['Number of compartments']=st.slider("Select number of compartments",1,10,\
-                                                                state.params[self.name]['Number of compartments'],1)
-        state.params[self.name]['Number of transitions']=st.slider("Select number of transitions",0,30,\
-                                                                state.params[self.name]['Number of transitions'],1)
 
-        for i in range(state.params[self.name]['Number of compartments']):
-            st.header("Compartment "+str(i+1))
+        dict = state.params[self.name]
+        input_options = ['Website', 'Upload File']
+
+        option = st.radio("Choose input mode", input_options, dict['Input Mode']['index'], key = "Model")
+
+        if(option == input_options[0]):
+            dict['Input Mode']['index'] = 0
+            dict['Input Mode']['name'] = option
+
+            dict['Number of compartments']=st.slider("Select number of compartments",1,10,\
+                                                                    dict['Number of compartments'],1)
+            dict['Number of transitions']=st.slider("Select number of transitions",0,30,\
+                                                                    dict['Number of transitions'],1)
+            self.run_compartments(dict)
+            st.write("---")
+            self.run_transitions(dict)
+            dict['model'] = self.get_model(dict)
+
+        elif(option == input_options[1]):
+            dict['Input Mode']['index'] = 1
+            dict['Input Mode']['name'] = option
+
+            file = st.file_uploader("Upload Model file")
+            if(file is not None):
+                if(file.name == "UserModel.py"):
+                    string = file.getvalue().decode("utf-8")
+                    write_to_file(string, file.name)
+                    dict['Input Mode']['filename'] = file.name
+                else:
+                    st.write("""
+                            Given File : {0} ; Required File : {1}
+                            """.format(file.name,"UserModel.py"))
+                    dict['Input Mode']['filename'] = None
+
+            if(dict['Input Mode']['filename']):
+                st.markdown("Saved {0}!".format(dict['Input Mode']['filename']))
+
+            if(dict['Input Mode']['filename'] == "UserModel.py"):
+                dict['model'] = get_model_from_file('')
+
+    def run_compartments(self, dict):
+        for i in range(dict['Number of compartments']):
+            st.markdown("### Compartment "+str(i+1))
             col1, col2 = st.beta_columns(2)
             name = None
 
             try:
-                cur_dict = state.params[self.name]['compartments'][i]
+                cur_dict = dict['compartments'][i]
             except:
-                state.params[self.name]['compartments'][i] = {'name':None,'infectious':False,'initial_prop':0.0}
-                cur_dict = state.params[self.name]['compartments'][i]
+                dict['compartments'][i] = {'name':None,'infectious':False,'initial_prop':0.0}
+                cur_dict = dict['compartments'][i]
 
             cur_dict['name'] = col1.text_input("Name of compartment "+str(i+1), cur_dict['name'])
 
@@ -54,15 +94,15 @@ class UI_Model(UI_Base):
                 cur_dict['initial_prop'] = col2.slider("Intial proportion of \'"+cur_dict['name']+"\'",0.0,1.0,cur_dict['initial_prop'],0.01)
 
 
-        st.write("------------------------------------------------------------------------------------")
-        individual_types, infected_states, state_proportion = self.get_model_parameters(state.params[self.name])
-        for i in range(state.params[self.name]['Number of transitions']):
-            st.header("Transition "+str(i+1))
+    def run_transitions(self, dict):
+        individual_types, infected_states, state_proportion = self.get_model_parameters(dict)
+        for i in range(dict['Number of transitions']):
+            st.markdown("### Transition "+str(i+1))
             try:
-                cur_dict = state.params[self.name]['transitions'][i]
+                cur_dict = dict['transitions'][i]
             except:
-                state.params[self.name]['transitions'][i] = {'depends_infectious':False,'initial_index':0,'final_index':0,'normal_rate':0.03,'infectious_rate':{}}
-                cur_dict = state.params[self.name]['transitions'][i]
+                dict['transitions'][i] = {'depends_infectious':False,'initial_index':0,'final_index':0,'normal_rate':0.03,'infectious_rate':{}}
+                cur_dict = dict['transitions'][i]
 
             cur_dict['depends_infectious'] = st.checkbox("Does transition "+str(i+1)+" depend on infectious states?",cur_dict['depends_infectious'])
 
@@ -71,10 +111,10 @@ class UI_Model(UI_Base):
             name1 = col1.selectbox("Initial compartment for transition "+str(i+1),individual_types,index=cur_dict['initial_index'])
             name2 = col2.selectbox("Final compartment for transition "+str(i+1),individual_types,index=cur_dict['final_index'])
 
-            for j in range(state.params[self.name]['Number of compartments']):
-                if(name1==state.params[self.name]['compartments'][j]['name']):
+            for j in range(dict['Number of compartments']):
+                if(name1==dict['compartments'][j]['name']):
                     cur_dict['initial_index'] = j
-                elif(name2==state.params[self.name]['compartments'][j]['name']):
+                elif(name2==dict['compartments'][j]['name']):
                     cur_dict['final_index'] = j
 
             if cur_dict['depends_infectious']:
@@ -86,8 +126,6 @@ class UI_Model(UI_Base):
                         cur_dict['infectious_rate'][istate] = float(col3.text_input("Rate of infection from compartment "+istate+ " for transition "+str(i+1),cur_dict['infectious_rate'][istate]))
             else:
                 cur_dict['normal_rate']=float(col3.text_input("Rate constant for transition "+str(i+1),cur_dict['normal_rate']))
-
-        state.params[self.name]['model'] = self.get_model(state.params[self.name])
 
     def get_model_parameters(self,dict):
 
