@@ -1,6 +1,7 @@
 import streamlit as st
 import Simulator.ReadFile
 from Utils.file_utils import write_to_file, get_file_names_list
+from pyvis.network import Network
 
 def get_progress_UI_list():
 
@@ -83,7 +84,7 @@ def get_interaction_files_uploaders(config_obj):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, config_obj.interactions_files_list)
             config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
-            for file_name in config_obj.list_interactions_files: 
+            for file_name in config_obj.list_interactions_files:
                 f = st.file_uploader("Upload File name : {0}".format(file_name))
                 if(f is not None):
                     if(f.name == file_name):
@@ -141,3 +142,36 @@ def get_uploaders(key):
             get_event_files_uploaders(config_obj)
 
     return config_obj
+
+
+####################################################################
+# Graph display
+def get_num_agents(agents_file):
+    fp = open(agents_file,'r')
+    num = int(fp.readline())
+    return num
+
+def get_graph(agents_file, interaction_file_path):
+
+    number_of_agents = get_num_agents(agents_file)
+    fp = open(interaction_file_path,'r')
+
+    outpath = interaction_file_path[:-3]+'html'
+
+    num = int(fp.readline())
+    fp.readline()
+
+    ls = list(range(number_of_agents))
+    net = Network()
+
+    net.add_nodes(ls)
+
+    for i in range(num):
+        line = fp.readline()
+        line = line[:-1]
+        a,b = line.split(':')
+        net.add_edge(int(a),int(b))
+
+    fp.close()
+    net.show(outpath)
+    return outpath

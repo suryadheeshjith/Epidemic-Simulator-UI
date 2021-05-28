@@ -41,6 +41,7 @@ def get_info_keys(filename):
     f=open(filename,'r')
     f.readline()
     info_keys=get_value(f.readline())
+    f.close()
     return info_keys
 
 def save_agents_file(dict, config_obj):

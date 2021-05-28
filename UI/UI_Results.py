@@ -3,6 +3,8 @@ import Utils
 from UI.UI import UI_Base
 import os.path as osp
 from Utils.file_utils import get_info_keys
+from Utils.streamlit_utils import get_graph
+import streamlit.components.v1 as components
 
 class UI_Results(UI_Base):
     def __init__(self):
@@ -104,8 +106,8 @@ class UI_Results(UI_Base):
         elif(int_dict['Input Mode']['index']==1):
             path = int_dict['Input Mode']['list_filename']
             if(path):
-                config_obj.interaction_info_keys = get_info_keys(path)
-                config_obj.interactions_files_list = list_path
+                config_obj.interaction_info_keys = get_info_keys(int_dict['Input Mode']['single_filenames'][0])
+                config_obj.interactions_files_list = path
             else:
                 st.error("No Interaction files have been uploaded! Please check your environment again!")
                 return False
@@ -118,14 +120,32 @@ class UI_Results(UI_Base):
         elif(events_dict['Input Mode']['index']==1):
             path = events_dict['Input Mode']['list_filename']
             if(path):
-                config_obj.event_info_keys = get_info_keys(path)
-                config_obj.events_files_list = list_path
+                config_obj.event_info_keys = get_info_keys(events_dict['Input Mode']['single_filenames'][0])
+                config_obj.events_files_list = path
             else:
                 st.error("No Event files have been uploaded! Please check your environment again!")
                 return False
 
         return True
 
+    def display_graph(self, config_obj, dict):
+        int_dict = dict['Interactions']
+        int_dict['Input Mode']['single_filenames'] = list(set(int_dict['Input Mode']['single_filenames']))
+
+        if(int_dict['Input Mode']['index']==0):
+            outpath = get_graph(config_obj.agents_filename, "web_single_interaction.txt")
+            HtmlFile = open(outpath, 'r', encoding='utf-8')
+            source_code = HtmlFile.read()
+            components.html(source_code, height = 600,width=600)
+
+        elif(not int_dict['Input Mode']['single_filenames']):
+            st.info("No interaction networks!")
+        else:
+            for file in int_dict['Input Mode']['single_filenames']:
+                outpath = get_graph(config_obj.agents_filename, file)
+                HtmlFile = open(outpath, 'r', encoding='utf-8')
+                source_code = HtmlFile.read()
+                components.html(source_code, height = 900,width=900)
 
 
     def run(self, state):
@@ -133,6 +153,9 @@ class UI_Results(UI_Base):
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
         self.save_general_config(state.params['General Configuration'],config_obj)
         flag = self.save_data_files(state.params['Environment'],config_obj)
+        disp_graph = st.button("Click here to display interaction network(s)!")
+        if(disp_graph):
+            self.display_graph(config_obj,state.params['Environment'])
 
         if(flag):
             Utils.run_simulation_from_web(config_obj,state)
