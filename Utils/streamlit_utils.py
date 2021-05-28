@@ -151,7 +151,7 @@ def get_num_agents(agents_file):
     num = int(fp.readline())
     return num
 
-def get_graph(agents_file, interaction_file_path):
+def get_interaction_graph(agents_file, interaction_file_path):
 
     number_of_agents = get_num_agents(agents_file)
     fp = open(interaction_file_path,'r')
@@ -175,3 +175,8 @@ def get_graph(agents_file, interaction_file_path):
     fp.close()
     net.show(outpath)
     return outpath
+
+def get_model_graph(model):
+    pass
+    net = Network()
+    # print(model.__dict__)

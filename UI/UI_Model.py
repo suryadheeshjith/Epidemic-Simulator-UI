@@ -7,6 +7,7 @@ import Simulator.ReadFile
 import Simulator.World
 import Simulator.Model as Model
 from Utils.file_utils import get_model_from_file, write_to_file
+from Utils.streamlit_utils import get_model_graph
 from UI.UI import UI_Base
 
 
@@ -72,6 +73,8 @@ class UI_Model(UI_Base):
 
             if(dict['Input Mode']['filename'] == "UserModel.py"):
                 dict['model'] = get_model_from_file('')
+
+        # get_model_graph(dict['model'])
 
     def run_compartments(self, dict):
         for i in range(dict['Number of compartments']):

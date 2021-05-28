@@ -3,7 +3,7 @@ import Utils
 from UI.UI import UI_Base
 import os.path as osp
 from Utils.file_utils import get_info_keys
-from Utils.streamlit_utils import get_graph
+from Utils.streamlit_utils import get_interaction_graph
 import streamlit.components.v1 as components
 
 class UI_Results(UI_Base):
