@@ -6,7 +6,7 @@ import time
 from csv import DictReader
 
 class ReadConfiguration():
-	def __init__(self,filename=None):
+	def __init__(self,filename):
 		self.worlds=None
 		self.time_steps=None
 		self.starting_exposed_percentage=None
@@ -29,7 +29,6 @@ class ReadConfiguration():
 		self.events_files_list=self.get_value_config(f.readline())
 
 		f.close()
-
 
 		if 'Agent Index' not in self.agent_info_keys.split(':'):
 			raise Exception("Error! Agent file  does not contain parameter \'Agent Index\'")
@@ -157,7 +156,8 @@ class ReadInteractions(BaseReadFile):
 			for i in range(self.no_interactions):
 				parameter_list=(self.get_value(f.readline())).split(':')
 				agent_index,info_dict=self.get_interaction(parameter_list)
-				agents_obj.agents[agent_index].add_contact(info_dict)
+				if(agent_index is not None and info_dict is not None):
+					agents_obj.agents[agent_index].add_contact(info_dict)
 
 			f.close()
 
@@ -179,8 +179,9 @@ class ReadInteractions(BaseReadFile):
 
 				for i in range(self.n):
 					info_dict=csv_list[i]
-					agent_index=info_dict['Agent Index']
-					agents_obj.agents[agent_index].add_contact(info_dict)
+					if(info_dict['Agent Index'] in list(self.agents_obj.agents) and info_dict['Interacting Agent Index'] in list(self.agents_obj.agents)):
+						agent_index=info_dict['Agent Index']
+						agents_obj.agents[agent_index].add_contact(info_dict)
 
 
 	def get_interaction(self,parameter_list):
@@ -192,6 +193,9 @@ class ReadInteractions(BaseReadFile):
 				agent_index=parameter_list[i]
 
 			info_dict[key]=parameter_list[i]
+
+		if(agent_index not in list(self.agents_obj.agents) or info_dict['Interacting Agent Index'] not in list(self.agents_obj.agents)):
+			agent_index,info_dict = None, None
 
 		return agent_index,info_dict
 
@@ -229,10 +233,11 @@ class ReadLocations(BaseReadFile):
 
 
 class ReadEvents(BaseReadFile):
-	def __init__(self,filename,config_obj,locations_obj):
+	def __init__(self,filename,config_obj,locations_obj,agents_obj):
 		super().__init__()
 		self.config_obj=config_obj
 		self.locations_obj=locations_obj
+		self.agents_obj=agents_obj
 		if filename=="" or filename==None:
 			return
 		f=open(filename,'r')
@@ -246,23 +251,34 @@ class ReadEvents(BaseReadFile):
 		for i in range(self.no_events):
 			parameter_list=(self.get_value(f.readline())).split(':')
 			location_index,info_dict=self.get_event(parameter_list)
-			self.locations_obj.locations[location_index].add_event(info_dict)
+			if(location_index is not None and info_dict is not None):
+				self.locations_obj.locations[location_index].add_event(info_dict)
 
 		f.close()
 
 	def get_event(self,parameter_list):
 		info_dict={}
 		location_index=None
+		agent_parameter_index = None
 		for i,key in enumerate(self.parameter_keys):
 			if key=='Location Index':
 				location_index=parameter_list[i]
 
 			if key=='Agents':
 				info_dict[key]=list(set(parameter_list[i].split(',')))
+				agent_parameter_index = key
 				if info_dict[key][-1]=='':
 					info_dict[key]=info_dict[:-1]
 			else:
 				info_dict[key]=parameter_list[i]
+
+
+		if(info_dict[agent_parameter_index] is None or self.agents_obj.agents is None):
+			location_index,info_dict = None, None
+
+		elif(set(info_dict[agent_parameter_index]) - set(list(self.agents_obj.agents))):
+			to_remove = set(info_dict[agent_parameter_index]) - set(list(self.agents_obj.agents))
+			info_dict[agent_parameter_index] = list(set(info_dict[agent_parameter_index]) - to_remove)
 
 		if location_index==None:
 			print("Error! No event to read")

@@ -24,10 +24,6 @@ class Simulate():
 		#Initialize states
 		self.model.initalize_states(self.agents_obj.agents)
 
-		#Reset Policies
-		for policy in self.policy_list:
-			policy.reset()
-
 		#Update State list
 		for agent in self.agents_obj.agents.values():
 			self.state_list[agent.state].append(agent.index)
@@ -54,7 +50,7 @@ class Simulate():
 
 		#Add events to locations
 		if events_filename!=None:
-			ReadFile.ReadEvents(events_filename,self.config_obj,self.locations_obj)
+			ReadFile.ReadEvents(events_filename,self.config_obj,self.locations_obj,self.agents_obj)
 
 			#Update event info to agents from location
 			for location in self.locations_obj.locations.values():
