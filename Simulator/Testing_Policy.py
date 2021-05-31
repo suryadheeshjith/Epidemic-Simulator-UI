@@ -161,6 +161,7 @@ class Test_Policy(Agent_Policy):
 		self.statistics = {}
 		self.current_machines = {}
 		self.total_cost=0
+		self.num_agents_to_test = None ####
 
 		assert callable(agents_per_step_fn)
 		self.agents_per_step_fn = agents_per_step_fn
