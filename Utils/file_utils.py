@@ -75,6 +75,22 @@ def save_locations_file(dict, config_obj):
     config_obj.location_info_keys = header
     config_obj.locations_filename = path
 
+def get_random_graph_lines(n,p):
+    lines=[]
+    for i in range(n-1):
+        for j in range(i+1,n):
+            if random.random()<p:
+                lines.append(str(i)+':'+str(j)+'\n')
+                lines.append(str(j)+':'+str(i)+'\n')
+    return lines
+
+def get_star_graph_lines(n):
+    lines=[]
+    for i in range(1,n):
+        lines.append(str(i)+':'+str(0)+'\n')
+        lines.append(str(0)+':'+str(i)+'\n')
+    return lines
+
 def save_interactions_file(dict, config_obj, n):
 
     if(n==0 or dict['Interaction Graph']['name']=='No Interactions'):
@@ -87,17 +103,16 @@ def save_interactions_file(dict, config_obj, n):
 
     header = "Agent Index:Interacting Agent Index"
     p=0.0
+    lines = []
     if(dict['Interaction Graph']['name']=='Random Graph'):
         p = dict['Interaction Graph']['params']['prob']
-    elif(dict['Interaction Graph']['name']=='Fully Connected Graph'):
-        p = 1.0
+        lines = get_random_graph_lines(n,p)
 
-    lines=[]
-    for i in range(n-1):
-        for j in range(i+1,n):
-            if random.random()<p:
-                lines.append(str(i)+':'+str(j)+'\n')
-                lines.append(str(j)+':'+str(i)+'\n')
+    elif(dict['Interaction Graph']['name']=='Fully Connected Graph'):
+        lines = get_random_graph_lines(n,1.0)
+
+    elif(dict['Interaction Graph']['name']=='Star Graph'):
+        lines = get_star_graph_lines(n)
 
     string = str(len(lines))+'\n'
     string += header+'\n'

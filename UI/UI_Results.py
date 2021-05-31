@@ -141,11 +141,15 @@ class UI_Results(UI_Base):
         elif(not int_dict['Input Mode']['single_filenames']):
             st.info("No interaction networks!")
         else:
+            x=0
             for file in int_dict['Input Mode']['single_filenames']:
+                if(x==3):
+                    break
                 outpath = get_interaction_graph(config_obj.agents_filename, file)
                 HtmlFile = open(outpath, 'r', encoding='utf-8')
                 source_code = HtmlFile.read()
                 components.html(source_code, height = 900,width=900)
+                x+=1
 
 
     def run(self, state):
@@ -155,9 +159,7 @@ class UI_Results(UI_Base):
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
         self.save_general_config(state.params['General Configuration'],config_obj)
         flag = self.save_data_files(state.params['Environment'],config_obj)
-        disp_graph = st.button("Click here to display interaction network(s)!")
-        if(disp_graph):
-            self.display_graph(config_obj,state.params['Environment'])
+        self.display_graph(config_obj,state.params['Environment'])
 
         if(flag):
             Utils.run_simulation_from_web(config_obj,state,no_iterations)

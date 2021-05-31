@@ -72,7 +72,7 @@ class UI_Environment(UI_Base):
                 cur_dict['Input Mode']['index'] = 0
                 cur_dict['Input Mode']['name'] = option
 
-                list_of_graphs = ['No Interactions', 'Random Graph', 'Fully Connected Graph']
+                list_of_graphs = ['No Interactions', 'Random Graph', 'Fully Connected Graph', 'Star Graph']
                 name_of_graph=st.selectbox("Select interaction graph",list_of_graphs,cur_dict['Interaction Graph']['index'])
 
                 if(name_of_graph == 'No Interactions'):
@@ -90,6 +90,11 @@ class UI_Environment(UI_Base):
                     cur_dict['Interaction Graph']['index'] = 2
                     cur_dict['Interaction Graph']['name'] = 'Fully Connected Graph'
                     cur_dict['Interaction Graph']['params']['prob'] = 0.0
+
+                elif(name_of_graph == 'Star Graph'):
+                    cur_dict['Interaction Graph']['index'] = 3
+                    cur_dict['Interaction Graph']['name'] = 'Star Graph'
+                    cur_dict['Interaction Graph']['params']['prob'] = None
 
             elif(option == input_options[1]):
                 cur_dict['Input Mode']['index'] = 1

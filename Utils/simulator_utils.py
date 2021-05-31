@@ -6,7 +6,7 @@ import streamlit as st
 import pandas as pd
 
 ##########################################################################################
-# Common utils for both worlds
+# Common utils for both modes
 def plot_disease_graph(world_obj):
     plt = world_obj.simulate_worlds()
     st.pyplot(plt)
@@ -98,7 +98,7 @@ def get_world_object_web(config_obj, state, st_list):
     config_obj.world_obj = world_obj
     return world_obj
 
-  
+
 def run_simulation_from_web(config_obj,state,no_iterations):
     st_list = get_progress_UI_list()
     if(config_obj):
