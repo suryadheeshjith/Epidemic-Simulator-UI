@@ -74,7 +74,7 @@ class UI_Model(UI_Base):
             if(dict['Input Mode']['filename'] == "UserModel.py"):
                 dict['model'] = get_model_from_file('')
 
-        # get_model_graph(dict['model'])
+        get_model_graph(dict['model'])
 
     def run_compartments(self, dict):
         for i in range(dict['Number of compartments']):

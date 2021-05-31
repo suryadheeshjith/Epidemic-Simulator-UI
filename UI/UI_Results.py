@@ -3,8 +3,8 @@ import Utils
 from UI.UI import UI_Base
 import os.path as osp
 from Utils.file_utils import get_info_keys
-from Utils.streamlit_utils import get_interaction_graph
-import streamlit.components.v1 as components
+from Utils.streamlit_utils import display_interaction_graph, get_num_agents
+from Utils.streamlit_utils import get_model_graph
 
 class UI_Results(UI_Base):
     def __init__(self):
@@ -12,7 +12,7 @@ class UI_Results(UI_Base):
         self.name = 'Results'
         self.requires_reset = False
 
-    def show_configuration(self, state):
+    def show_configuration(self, state, config_obj):
         # for i, key in enumerate(state.params.keys()):
         #     if(i!=len(state.params)-1):
         #         st.markdown("#### {0}".format(key))
@@ -37,6 +37,8 @@ class UI_Results(UI_Base):
                 if(state.params[key]['Interactions']['Input Mode']['index']==0):
                     st.markdown("Interaction Type : {0}".format(state.params[key]['Interactions']['Interaction Graph']['name']))
                 st.markdown("Type of Input for Interactions : {0}".format(state.params[key]['Interactions']['Input Mode']['name']))
+                number_of_agents = get_num_agents(config_obj.agents_filename)
+                display_interaction_graph(number_of_agents,state.params['Environment'])
 
                 st.markdown("<ins>Locations</ins>", unsafe_allow_html=True)
                 if(state.params[key]['Locations']['Input Mode']['index']==0):
@@ -58,6 +60,7 @@ class UI_Results(UI_Base):
                         name = state.params[key]['compartments'][i]['name']
                         st.markdown("Compartment {0} : {1}".format(i+1,name))
                 st.markdown("Type of Input for the Model : {0}".format(state.params[key]['Input Mode']['name']))
+                get_model_graph(state.params[key]['model'])
 
             # if(key=="Policy"):
             #     st.markdown("#### {0}".format(key))
@@ -128,38 +131,14 @@ class UI_Results(UI_Base):
 
         return True
 
-    def display_graph(self, config_obj, dict):
-        int_dict = dict['Interactions']
-        int_dict['Input Mode']['single_filenames'] = list(set(int_dict['Input Mode']['single_filenames']))
-
-        if(int_dict['Input Mode']['index']==0):
-            outpath = get_interaction_graph(config_obj.agents_filename, "web_single_interaction.txt")
-            HtmlFile = open(outpath, 'r', encoding='utf-8')
-            source_code = HtmlFile.read()
-            components.html(source_code, height = 600,width=600)
-
-        elif(not int_dict['Input Mode']['single_filenames']):
-            st.info("No interaction networks!")
-        else:
-            x=0
-            for file in int_dict['Input Mode']['single_filenames']:
-                if(x==3):
-                    break
-                outpath = get_interaction_graph(config_obj.agents_filename, file)
-                HtmlFile = open(outpath, 'r', encoding='utf-8')
-                source_code = HtmlFile.read()
-                components.html(source_code, height = 900,width=900)
-                x+=1
-
 
     def run(self, state):
 
         no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
-        self.show_configuration(state)
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
         self.save_general_config(state.params['General Configuration'],config_obj)
         flag = self.save_data_files(state.params['Environment'],config_obj)
-        self.display_graph(config_obj,state.params['Environment'])
+        self.show_configuration(state, config_obj)
 
         if(flag):
             Utils.run_simulation_from_web(config_obj,state,no_iterations)

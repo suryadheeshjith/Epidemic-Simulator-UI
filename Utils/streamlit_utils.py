@@ -1,7 +1,8 @@
 import streamlit as st
 import Simulator.ReadFile
-from Utils.file_utils import write_to_file, get_file_names_list
+from Utils.file_utils import write_to_file, get_file_names_list, get_random_graph_lines, get_star_graph_lines
 from pyvis.network import Network
+import streamlit.components.v1 as components
 
 def get_progress_UI_list():
 
@@ -151,9 +152,8 @@ def get_num_agents(agents_file):
     num = int(fp.readline())
     return num
 
-def get_interaction_graph(agents_file, interaction_file_path):
+def get_interaction_graph_from_file(number_of_agents, interaction_file_path):
 
-    number_of_agents = get_num_agents(agents_file)
     fp = open(interaction_file_path,'r')
 
     outpath = interaction_file_path[:-3]+'html'
@@ -173,9 +173,87 @@ def get_interaction_graph(agents_file, interaction_file_path):
         net.add_edge(int(a),int(b))
 
     fp.close()
+    net.show_buttons(filter_=['physics'])
     net.show(outpath)
     return outpath
 
-def get_model_graph(model):
-    pass
+
+def get_interaction_graph_from_dict(number_of_agents, dict):
+
+    outpath = "dummy_int_graph.html"
+    ls = list(range(number_of_agents))
     net = Network()
+
+    net.add_nodes(ls)
+    p=0.0
+    lines = []
+    if(dict['Interaction Graph']['name']=='Random Graph'):
+        p = dict['Interaction Graph']['params']['prob']
+        lines = get_random_graph_lines(number_of_agents,p)
+
+    elif(dict['Interaction Graph']['name']=='Fully Connected Graph'):
+        lines = get_random_graph_lines(number_of_agents,1.0)
+
+    elif(dict['Interaction Graph']['name']=='Star Graph'):
+        lines = get_star_graph_lines(number_of_agents)
+
+    for line in lines:
+        line = line[:-1]
+        a,b = line.split(':')
+        net.add_edge(int(a),int(b))
+
+    net.show_buttons(filter_=['physics'])
+    net.show(outpath)
+    return outpath
+
+def display_interaction_graph(number_of_agents, dict):
+    int_dict = dict['Interactions']
+    int_dict['Input Mode']['single_filenames'] = list(set(int_dict['Input Mode']['single_filenames']))
+
+    if(int_dict['Input Mode']['index']==0):
+        outpath = get_interaction_graph_from_dict(number_of_agents, int_dict)
+        HtmlFile = open(outpath, 'r', encoding='utf-8')
+        source_code = HtmlFile.read()
+        components.html(source_code, height = 600,width=1200)
+
+    elif(not int_dict['Input Mode']['single_filenames']):
+        st.info("No interaction networks!")
+    else:
+        x=0
+        for file in int_dict['Input Mode']['single_filenames']:
+            if(x==3):
+                break
+            outpath = get_interaction_graph_from_file(number_of_agents, file)
+            HtmlFile = open(outpath, 'r', encoding='utf-8')
+            source_code = HtmlFile.read()
+            components.html(source_code, height = 600,width=1200)
+            x+=1
+
+
+
+def get_model_graph(model):
+    outpath = "dummy_model.html"
+    # print(model.__dict__)
+    net = Network(directed=True)
+    states = model.individual_state_types
+    infected_states = model.infected_states
+    for i,state in enumerate(states):
+        if(state in infected_states):
+            net.add_node(i, label=state, shape='box', color = '#fc9283', borderWidth=30, borderWidthSelected=30)
+        else:
+            net.add_node(i, label=state, shape='box', color = '#99bdf7', borderWidth=30, borderWidthSelected=30)
+
+    transitions = model.transmission_prob
+    for i,state_i in enumerate(states):
+        for j,state_j in enumerate(states):
+            if(transitions[state_i][state_j].args!=(0,)):
+                if(state_j in infected_states):
+                    net.add_edge(i,j,color='#fc9283')
+                else:
+                    net.add_edge(i,j,color='#99bdf7')
+
+
+    net.show(outpath)
+    HtmlFile = open(outpath, 'r', encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, height = 600,width=1200)

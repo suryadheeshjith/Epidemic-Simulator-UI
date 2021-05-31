@@ -1,6 +1,7 @@
 import streamlit as st
 from UI.UI import UI_Base
 from Utils.file_utils import write_to_file, get_file_names_list
+from Utils.streamlit_utils import display_interaction_graph
 
 class UI_Environment(UI_Base):
     def __init__(self):
@@ -38,6 +39,7 @@ class UI_Environment(UI_Base):
         dict = state.params[self.name]
         self.run_agents(dict,input_options)
         self.run_interactions(dict,input_options)
+        display_interaction_graph(dict['Agents']['Number of Agents'],state.params['Environment'])
         self.run_locations(dict,input_options)
         self.run_events(dict,input_options)
 
