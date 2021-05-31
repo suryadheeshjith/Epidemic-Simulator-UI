@@ -133,7 +133,7 @@ class UI_Results(UI_Base):
         int_dict['Input Mode']['single_filenames'] = list(set(int_dict['Input Mode']['single_filenames']))
 
         if(int_dict['Input Mode']['index']==0):
-            outpath = get_graph(config_obj.agents_filename, "web_single_interaction.txt")
+            outpath = get_interaction_graph(config_obj.agents_filename, "web_single_interaction.txt")
             HtmlFile = open(outpath, 'r', encoding='utf-8')
             source_code = HtmlFile.read()
             components.html(source_code, height = 600,width=600)
@@ -142,13 +142,15 @@ class UI_Results(UI_Base):
             st.info("No interaction networks!")
         else:
             for file in int_dict['Input Mode']['single_filenames']:
-                outpath = get_graph(config_obj.agents_filename, file)
+                outpath = get_interaction_graph(config_obj.agents_filename, file)
                 HtmlFile = open(outpath, 'r', encoding='utf-8')
                 source_code = HtmlFile.read()
                 components.html(source_code, height = 900,width=900)
 
 
     def run(self, state):
+
+        no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
         self.show_configuration(state)
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
         self.save_general_config(state.params['General Configuration'],config_obj)
@@ -158,4 +160,4 @@ class UI_Results(UI_Base):
             self.display_graph(config_obj,state.params['Environment'])
 
         if(flag):
-            Utils.run_simulation_from_web(config_obj,state)
+            Utils.run_simulation_from_web(config_obj,state,no_iterations)

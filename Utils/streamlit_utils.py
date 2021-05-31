@@ -179,4 +179,3 @@ def get_interaction_graph(agents_file, interaction_file_path):
 def get_model_graph(model):
     pass
     net = Network()
-    # print(model.__dict__)

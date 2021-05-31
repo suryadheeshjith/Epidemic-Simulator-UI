@@ -1,7 +1,7 @@
 import streamlit as st
 import UI
 import Utils
-
+import traceback
 def main():
     st.set_page_config(page_title="Episimmer",page_icon="Data/Healthbadge_logo.png")
     st.markdown("""
@@ -65,8 +65,10 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as e:
-        print(e)
-        st.error(e)
+    # try:
+    #     main()
+    # except Exception as e:
+    #     print(e)
+    #     traceback.print_exc()
+    #     st.error(e)
+    main()
