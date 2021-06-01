@@ -86,7 +86,7 @@ def main():
 if __name__ == "__main__":
     try:
 
-        filename = file_selector(os.path.join('examples','Complex Probablistic Lockdown Model'))
+        filename = file_selector(os.path.join('examples','Example_2'))
         st.write('You selected `%s`' % filename)
         # main()
     except Exception as e:
