@@ -70,6 +70,7 @@ def main():
         st.markdown("""
             Select any of the templates below. All of them are from the /examples directory [here](https://github.com/healthbadge/episimmer).
             """)
+        st.write("---")
         ls = Utils.get_example_names_list()
         choice = st.selectbox("Choose Template",ls)
         Utils.run_simulation_from_template(choice)
