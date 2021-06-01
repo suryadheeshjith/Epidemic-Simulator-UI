@@ -11,7 +11,7 @@ class UI_Environment(UI_Base):
     def get_defaults_dict(self, state):
         dict = {}
         dict['Agents'] = {}
-        dict['Agents']['Number of Agents'] = 300
+        dict['Agents']['Number of Agents'] = 100
         dict['Agents']['Input Mode'] = {'index':0, 'name':'Website', 'filename':None}
         dict['Interactions'] = {}
         dict['Interactions']['Interaction Graph'] = {'index':1, 'name': 'Random Graph','params':{'prob':0.01}}
