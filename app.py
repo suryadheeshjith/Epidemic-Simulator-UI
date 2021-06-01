@@ -36,7 +36,7 @@ def main():
     # Options - Upload Files
     if(option=='Upload files (Recommended)'):
         st.markdown("""
-            To use some pre-built examples, download some from [here](https://github.com/healthbadge/episimmer/tree/master/examples) and run the simulator.
+            Learn how to create your files [here](https://github.com/healthbadge/episimmer/tree/master/examples).
             """)
         st.write("---")
         clear_button = st.button("Click here to clear all files")
