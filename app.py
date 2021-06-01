@@ -88,7 +88,7 @@ if __name__ == "__main__":
 
         filename = file_selector('examples')
         st.write('You selected `%s`' % filename)
-        main()
+        # main()
     except Exception as e:
         print(e)
         traceback.print_exc()
