@@ -6,7 +6,7 @@ import streamlit as st
 import os
 
 def file_selector(folder_path='.'):
-    filenames = Utils.get_example_names_list()
+    filenames = os.listdir(folder_path)
     selected_filename = st.selectbox('Select a file', filenames)
     return os.path.join(folder_path, selected_filename)
 
@@ -86,7 +86,7 @@ def main():
 if __name__ == "__main__":
     try:
 
-        filename = file_selector('examples')
+        filename = file_selector(os.path.join('examples','Complex Probablistic Lockdown Model'))
         st.write('You selected `%s`' % filename)
         # main()
     except Exception as e:
