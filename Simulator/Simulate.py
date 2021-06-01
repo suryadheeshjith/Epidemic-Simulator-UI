@@ -25,7 +25,6 @@ class Simulate():
 		self.model.initalize_states(self.agents_obj.agents)
 
 		#Reset Policies
-		print(self.policy_lists)
 		for policy in self.policy_list:
 			policy.reset()
 
