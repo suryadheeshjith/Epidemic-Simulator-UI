@@ -2,6 +2,14 @@ import streamlit as st
 import UI
 import Utils
 import traceback
+import streamlit as st
+import os
+
+def file_selector(folder_path='.'):
+    filenames = os.listdir(folder_path)
+    selected_filename = st.selectbox('Select a file', filenames)
+    return os.path.join(folder_path, selected_filename)
+
 def main():
     st.set_page_config(page_title="Episimmer",page_icon="Data/Healthbadge_logo.png")
     st.markdown("""
@@ -77,6 +85,9 @@ def main():
 
 if __name__ == "__main__":
     try:
+
+        filename = file_selector('examples')
+        st.write('You selected `%s`' % filename)
         main()
     except Exception as e:
         print(e)
