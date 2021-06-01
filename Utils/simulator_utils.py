@@ -1,10 +1,12 @@
 from Utils.streamlit_utils import get_progress_UI_list
-from Utils.file_utils import files_checker, get_model_from_file, get_policy_from_file, get_file_names_list
+from Utils.file_utils import files_checker, get_model_from_file, get_policy_from_file, get_file_names_list, get_config_path, get_file_paths
 import Simulator.World
 import Simulator.vulnerability_detection.Algorithm as Algorithm
+import Simulator.ReadFile as ReadFile
 import streamlit as st
 import pandas as pd
 import copy
+import os.path as osp
 
 ##########################################################################################
 # Common utils for both modes
@@ -65,7 +67,8 @@ def get_world_object_upload(config_obj, st_list):
 
 def run_simulation_from_upload(config_obj):
     st_list = get_progress_UI_list()
-    no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
+    mc_options = [10,50,100,200,400,1000,5000]
+    no_iterations = st.sidebar.select_slider("Number of Monte Carlo iterations",mc_options, value=100)
     if(files_checker(config_obj)):
         button0 = st.button("Run simulation")
         button1 = st.button("Vulnerable agents")
@@ -97,7 +100,8 @@ def get_world_object_web(config_obj, state, st_list):
 
 
 def run_simulation_from_web(config_obj,state):
-    no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
+    mc_options = [10,50,100,200,400,1000,5000]
+    no_iterations = st.sidebar.select_slider("Number of Monte Carlo iterations",mc_options, value=100)
     st_list = get_progress_UI_list()
     if(config_obj):
         button0 = st.button("Run simulation")
@@ -114,3 +118,62 @@ def run_simulation_from_web(config_obj,state):
         elif(button2):
             world_obj=get_world_object_web(config_obj, state, st_list)
             run_agent_vulnerabilities(config_obj,no_iterations)
+
+##########################################################################################
+# Run simulation from template
+
+def get_world_object_template(example_path, config_obj, st_list):
+
+    model = get_model_from_file(example_path)
+    policy_list, event_restriction_fn=get_policy_from_file(example_path)
+    config_obj.model = model
+    config_obj.policy_list = policy_list
+    config_obj.event_restriction_fn = event_restriction_fn
+    config_obj.list_interactions_files = None
+    config_obj.list_events_files = None
+    try:
+        ls = get_file_names_list(config_obj.interactions_files_list)
+        config_obj.list_interactions_files = [osp.join(example_path,f) for f in ls]
+    except:
+        pass
+    try:
+        ls = get_file_names_list(config_obj.events_files_list)
+        config_obj.list_events_files = [osp.join(example_path,f) for f in ls]
+    except:
+        pass
+
+    world_obj=Simulator.World.World(config_obj,config_obj.model,config_obj.policy_list,config_obj.event_restriction_fn,config_obj.agents_filename,\
+                                    config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
+
+    config_obj.world_obj = world_obj
+    return world_obj
+
+def run_simulation_from_template(choice):
+    example_path = osp.join('examples',choice)
+    mc_options = [10,50,100,200,400,1000,5000]
+    no_iterations = st.sidebar.select_slider("Number of Monte Carlo iterations",mc_options, value=100)
+    st_list = get_progress_UI_list()
+
+    config_filename = get_config_path(example_path)
+    config_obj=ReadFile.ReadConfiguration(config_filename)
+    agents_filename, interactions_FilesList_filename,\
+    events_FilesList_filename, locations_filename = get_file_paths(example_path,config_obj)
+    config_obj.agents_filename = agents_filename
+    config_obj.interactions_files_list = interactions_FilesList_filename
+    config_obj.events_files_list = events_FilesList_filename
+    config_obj.locations_filename = locations_filename
+
+    button0 = st.button("Run simulation")
+    button1 = st.button("Vulnerable agents")
+    button2 = st.button("Agent vulnerabilities")
+    if(button0):
+        world_obj = get_world_object_template(example_path,config_obj, st_list)
+        plot_disease_graph(world_obj)
+
+    elif(button1):
+        world_obj=get_world_object_template(example_path,config_obj, st_list)
+        run_vulnerable_agents(world_obj, no_iterations)
+
+    elif(button2):
+        world_obj=get_world_object_template(example_path,config_obj, st_list)
+        run_agent_vulnerabilities(config_obj,no_iterations)

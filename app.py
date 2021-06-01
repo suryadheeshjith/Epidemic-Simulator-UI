@@ -15,7 +15,7 @@ def main():
     the simulator has to offer. Doing this through the website will only have limited capability.
     """)
 
-    input_options = ['Upload files (Recommended)', 'Input data on the Website']
+    input_options = ['Upload files (Recommended)', 'Input data on the Website', 'Use templates']
     option = st.selectbox('Input Mode : ', input_options)
 
     # Session state
@@ -57,6 +57,17 @@ def main():
 
         state(params=defaults)
         app.execute_app(state)
+
+    elif(option == 'Use templates'):
+        st.markdown("""
+            Select any of the templates below. All of them are from the /examples directory [here](https://github.com/healthbadge/episimmer).
+            """)
+        ls = Utils.get_example_names_list()
+        choice = st.selectbox("Choose Template",ls)
+        Utils.run_simulation_from_template(choice)
+
+
+
 
     st.sidebar.markdown("# :clipboard: About")
     st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer).\

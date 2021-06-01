@@ -230,6 +230,32 @@ def files_checker(config_obj):
     return True
 
 ####################################################################
+# Examples reading and template helper
+def get_example_names_list():
+    dir = 'examples'
+    ls = [f.path.split("/")[1] for f in os.scandir(dir) if f.is_dir()]
+    ls.sort()
+    return ls
+
+def get_config_path(path):
+    config_filepath=osp.join(path,'config.txt')
+    return config_filepath
+
+
+def get_file_paths(example_path,config_obj):
+
+    locations_filename=None
+    agents_filename=osp.join(example_path,config_obj.agents_filename)
+    interactions_FilesList_filename=osp.join(example_path,config_obj.interactions_files_list)
+    events_FilesList_filename=osp.join(example_path,config_obj.events_files_list)
+    if config_obj.locations_filename=="":
+    	locations_filename=None
+    else:
+    	locations_filename=osp.join(example_path,config_obj.locations_filename)
+    return agents_filename, interactions_FilesList_filename, events_FilesList_filename, locations_filename
+
+
+####################################################################
 # Model and Policy file reading
 
 def module_from_file(module_name, file_path):
