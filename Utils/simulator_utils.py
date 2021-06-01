@@ -19,15 +19,17 @@ def run_vulnerable_agents(world_obj, no_iterations):
     mc_obj.do_MC(no_iterations)
     st.markdown("Top 10 vulnerable agents : ")
     dict = mc_obj.get_maximum_vulnerable_agents(10)
-    for key in dict.keys():
-        dict[key] = [dict[key]]
-    df1 = pd.DataFrame.from_dict(dict)
+    new_dict = {}
+    for i,key in enumerate(dict.keys()):
+        new_dict[i] = {'Agent index':key,'score':dict[key]}
+    df1 = pd.DataFrame.from_dict(new_dict,'index')
     st.dataframe(df1)
     st.markdown("Bottom 10 vulnerable agents : ")
     dict = mc_obj.get_minimum_vulnerable_agents(10)
-    for key in dict.keys():
-        dict[key] = [dict[key]]
-    df2 = pd.DataFrame.from_dict(dict)
+    new_dict = {}
+    for i,key in enumerate(dict.keys()):
+        new_dict[i] = {'Agent index':key,'score':dict[key]}
+    df2 = pd.DataFrame.from_dict(new_dict,'index')
     st.dataframe(df2)
 
 def run_agent_vulnerabilities(config_obj,no_iterations):
@@ -37,15 +39,17 @@ def run_agent_vulnerabilities(config_obj,no_iterations):
 
     st.markdown("Top 10 agent vulnerabilities : ")
     dict = mc_obj.get_maximum_agent_vulnerability(10)
-    for key in dict.keys():
-        dict[key] = [dict[key]]
-    df1 = pd.DataFrame.from_dict(dict)
+    new_dict = {}
+    for i,key in enumerate(dict.keys()):
+        new_dict[i] = {'Agent index':key,'score':dict[key]}
+    df1 = pd.DataFrame.from_dict(new_dict,'index')
     st.dataframe(df1)
     st.markdown("Bottom 10 agent vulnerabilities : ")
     dict = mc_obj.get_minimum_agent_vulnerability(10)
-    for key in dict.keys():
-        dict[key] = [dict[key]]
-    df2 = pd.DataFrame.from_dict(dict)
+    new_dict = {}
+    for i,key in enumerate(dict.keys()):
+        new_dict[i] = {'Agent index':key,'score':dict[key]}
+    df2 = pd.DataFrame.from_dict(new_dict,'index')
     st.dataframe(df2)
 
 def get_no_iterations(option):
