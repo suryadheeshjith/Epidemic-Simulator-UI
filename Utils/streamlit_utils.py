@@ -1,5 +1,6 @@
 import streamlit as st
 import Simulator.ReadFile
+import Simulator.Model as Model
 from Utils.file_utils import write_to_file, get_file_names_list, get_random_graph_lines, get_star_graph_lines
 from pyvis.network import Network
 import streamlit.components.v1 as components
@@ -233,7 +234,6 @@ def display_interaction_graph(number_of_agents, dict):
 
 def get_model_graph(model):
     outpath = "dummy_model.html"
-    # print(model.__dict__)
     net = Network(directed=True)
     states = model.individual_state_types
     infected_states = model.infected_states
@@ -247,7 +247,10 @@ def get_model_graph(model):
     for i,state_i in enumerate(states):
         for j,state_j in enumerate(states):
             if(transitions[state_i][state_j].args!=(0,)):
-                if(state_j in infected_states):
+                str1 = '<function StochasticModel.'
+                str2 = str(transitions[state_i][state_j].func.__func__)[len(str1):]
+                func_name = str2.split(' ')[0]
+                if(func_name=="full_p_infection"):
                     net.add_edge(i,j,color='#fc9283')
                 else:
                     net.add_edge(i,j,color='#99bdf7')

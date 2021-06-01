@@ -13,12 +13,6 @@ class UI_Results(UI_Base):
         self.requires_reset = False
 
     def show_configuration(self, state, config_obj):
-        # for i, key in enumerate(state.params.keys()):
-        #     if(i!=len(state.params)-1):
-        #         st.markdown("#### {0}".format(key))
-        #         for inner_key in state.params[key]:
-        #             st.markdown("{0} : {1}".format(inner_key,state.params[key][inner_key]))
-
         for key in state.params.keys():
 
             if(key=="General Configuration"):
@@ -62,9 +56,9 @@ class UI_Results(UI_Base):
                 st.markdown("Type of Input for the Model : {0}".format(state.params[key]['Input Mode']['name']))
                 get_model_graph(state.params[key]['model'])
 
-            # if(key=="Policy"):
-            #     st.markdown("#### {0}".format(key))
-                # st.markdown("Type of Input for the Policy : {0}".format(state.params[key]['Input Mode']['name']))
+            if(key=="Policy"):
+                st.markdown("#### {0}".format(key))
+                st.markdown("Type of Input for the Policy : {0}".format(state.params[key]['Input Mode']['name']))
 
 
     def save_general_config(self,dict,config_obj):
@@ -131,14 +125,11 @@ class UI_Results(UI_Base):
 
         return True
 
-
     def run(self, state):
-
-        no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
         config_obj = Utils.get_start_config(osp.join("Data","start_config.pkl"))
         self.save_general_config(state.params['General Configuration'],config_obj)
         flag = self.save_data_files(state.params['Environment'],config_obj)
         self.show_configuration(state, config_obj)
 
         if(flag):
-            Utils.run_simulation_from_web(config_obj,state,no_iterations)
+            Utils.run_simulation_from_web(config_obj,state)

@@ -4,6 +4,7 @@ import Simulator.World
 import Simulator.vulnerability_detection.Algorithm as Algorithm
 import streamlit as st
 import pandas as pd
+import copy
 
 ##########################################################################################
 # Common utils for both modes
@@ -57,7 +58,7 @@ def get_world_object_upload(config_obj, st_list):
     config_obj.event_restriction_fn = event_restriction_fn
 
     world_obj=Simulator.World.World(config_obj,config_obj.model,config_obj.policy_list,config_obj.event_restriction_fn,config_obj.agents_filename,\
-    config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
+                                    config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
 
     config_obj.world_obj = world_obj
     return world_obj
@@ -84,22 +85,19 @@ def run_simulation_from_upload(config_obj):
 ##########################################################################################
 # Run simulation from web
 def get_world_object_web(config_obj, state, st_list):
-    model = state.params['Model']['model']
-    policy_list = []
-    event_restriction_fn=state.params['Policy']['Event Restriction Function']
-
-    config_obj.model = model
-    config_obj.policy_list = policy_list
-    config_obj.event_restriction_fn = event_restriction_fn
+    config_obj.model = state.params['Model']['model']
+    config_obj.policy_list = copy.deepcopy(state.params['Policy']['Policy list']) ### Very important to deep copy because streamlit refreshes if any of its variables change.
+    config_obj.event_restriction_fn = state.params['Policy']['Event Restriction Function']
     config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
     config_obj.list_events_files = get_file_names_list(config_obj.events_files_list)
-    world_obj=Simulator.World.World(config_obj,model,policy_list,event_restriction_fn,config_obj.agents_filename,\
-    config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
+    world_obj=Simulator.World.World(config_obj,config_obj.model,config_obj.policy_list,config_obj.event_restriction_fn,config_obj.agents_filename,\
+                                    config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
     config_obj.world_obj = world_obj
     return world_obj
 
 
-def run_simulation_from_web(config_obj,state,no_iterations):
+def run_simulation_from_web(config_obj,state):
+    no_iterations = st.sidebar.slider("Number of Monte Carlo iterations",1,1000,100)
     st_list = get_progress_UI_list()
     if(config_obj):
         button0 = st.button("Run simulation")
