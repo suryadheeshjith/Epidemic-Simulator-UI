@@ -1,7 +1,8 @@
-Number of worlds <30>
-Number of Days <30>
-Agent Parameter Keys <Agent Index:Type:Grade>
-Agent list filename <agents.txt>
+Random Seed <3>
+Number of worlds <3>
+Number of Days <10>
+Agent Parameter Keys <Agent Index>
+Agent list filename <agents.csv>
 Interaction Info Keys <>
 Interaction Files list filename <>
 Location Parameter Keys <Location Index>

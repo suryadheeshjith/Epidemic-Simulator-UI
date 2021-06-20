@@ -17,6 +17,7 @@ class UI_Results(UI_Base):
 
             if(key=="General Configuration"):
                 st.markdown("#### {0}".format(key))
+                st.markdown("Random Seed : {0}".format(state.params[key]['Random Seed']))
                 st.markdown("Days : {0}".format(state.params[key]['Days']))
                 st.markdown("Worlds : {0}".format(state.params[key]['Worlds']))
 
@@ -64,6 +65,7 @@ class UI_Results(UI_Base):
     def save_general_config(self,dict,config_obj):
         config_obj.worlds = dict['Worlds']
         config_obj.time_steps = dict['Days']
+        config_obj.random_seed = dict['Random Seed']
 
 
     def save_data_files(self, dict, config_obj):

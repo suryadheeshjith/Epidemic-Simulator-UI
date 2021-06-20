@@ -8,6 +8,7 @@ import importlib.util
 import streamlit as st
 import pickle
 import random
+from csv import DictReader
 
 file_list = ['requirements.txt','README.md','.gitignore','app.py','create_config_pickle.py']
 
@@ -38,10 +39,18 @@ def get_value(line):
     return line
 
 def get_info_keys(filename):
-    f=open(filename,'r')
-    f.readline()
-    info_keys=get_value(f.readline())
-    f.close()
+    fp=open(filename,'r')
+    file_type = filename[-3:]
+    info_keys = None
+    if(file_type=='txt'):
+        fp.readline()
+        info_keys=get_value(fp.readline())
+
+    elif(file_type=='csv'):
+        csv_dict_reader=DictReader(fp)
+        info_keys = ':'.join(csv_dict_reader.fieldnames)
+
+    fp.close()
     return info_keys
 
 def save_agents_file(dict, config_obj):
@@ -166,14 +175,14 @@ def save_events_file(dict, config_obj, n):
 ####################################################################
 # Retrieve list from file with list of filenames
 
-def get_file_names_list(fileslist_filename):
+def get_file_names_list(fileslist_filename, example_path):
 
     files_list = []
     if fileslist_filename=='':
         print('No files uploaded!')
     else:
-        obj=Simulator.ReadFile.ReadFilesList(fileslist_filename)
-        files_list=obj.file_list
+        Files_obj = [Simulator.ReadFile.ReadFilesList(osp.join(example_path, file)) for file in fileslist_filename]
+        files_list = [list(map(lambda x: osp.join(example_path, x), obj.file_list)) for obj in Files_obj]
         if files_list==[]:
             print('Nothing in files')
 
@@ -186,6 +195,12 @@ def check_single_file(filename):
     if(not osp.isfile(filename)):
         st.info("Please upload {0}!".format(filename))
         return False
+    return True
+
+def check_files_list_list(files_list_list):
+    for file in files_list_list:
+        if(not check_single_file(file)):
+            return False
     return True
 
 def files_checker(config_obj):
@@ -207,11 +222,12 @@ def files_checker(config_obj):
     if(not check_single_file('Generate_policy.py')):
         return False
 
-    if(config_obj.interactions_files_list):
-        if(not check_single_file(config_obj.interactions_files_list)):
+    if(config_obj.interactions_files_list_list != ['']):
+
+        if(not check_files_list_list(config_obj.interactions_files_list_list)):
             return False
-        else:
-            for file in config_obj.list_interactions_files:
+        for ls in config_obj.list_interactions_files:
+            for file in ls:
                 if(not check_single_file(file)):
                     return False
 
@@ -219,21 +235,21 @@ def files_checker(config_obj):
         if(not check_single_file(config_obj.locations_filename)):
             return False
 
-    if(config_obj.events_files_list):
-        if(not check_single_file(config_obj.events_files_list)):
+    if(config_obj.events_files_list_list != ['']):
+        if(not check_files_list_list(config_obj.events_files_list_list)):
             return False
-        else:
-            for file in config_obj.list_events_files:
+
+        for ls in config_obj.list_events_files:
+            for file in ls:
                 if(not check_single_file(file)):
                     return False
 
     return True
 
 ####################################################################
-# Examples reading and template helper
-def get_example_names_list():
-    dir = 'examples'
-    ls = [f.path.split("/")[1] for f in os.scandir(dir) if f.is_dir()]
+# Examples reading and template helpers
+def get_example_names_list(dir_path):
+    ls = [f.path.split("/")[-1] for f in os.scandir(dir_path) if f.is_dir()]
     ls.sort()
     return ls
 
@@ -244,13 +260,15 @@ def get_config_path(path):
 
 def get_file_paths(example_path,config_obj):
 
-    locations_filename=None
-    agents_filename=osp.join(example_path,config_obj.agents_filename)
-    interactions_FilesList_filename=osp.join(example_path,config_obj.interactions_files_list)
-    events_FilesList_filename=osp.join(example_path,config_obj.events_files_list)
-    if config_obj.locations_filename=="":
-    	locations_filename=None
-    else:
+    # File Names
+    locations_filename = None
+    events_FilesList_filename = interactions_FilesList_filename = []
+    agents_filename=osp.join(example_path, config_obj.agents_filename)
+    if config_obj.interactions_files_list_list != ['']:
+        interactions_FilesList_filename = [osp.join(example_path, interactions_files_list) for interactions_files_list in config_obj.interactions_files_list_list]
+    if config_obj.events_files_list_list != ['']:
+        events_FilesList_filename = [osp.join(example_path, events_files_list) for events_files_list in config_obj.events_files_list_list]
+    if config_obj.locations_filename != "":
     	locations_filename=osp.join(example_path,config_obj.locations_filename)
     return agents_filename, interactions_FilesList_filename, events_FilesList_filename, locations_filename
 

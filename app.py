@@ -2,7 +2,6 @@ import streamlit as st
 import UI
 import Utils
 import traceback
-import streamlit as st
 import os
 
 def file_selector(folder_path='.'):
@@ -71,12 +70,9 @@ def main():
             Select any of the templates below. All of them are from the /examples directory [here](https://github.com/healthbadge/episimmer).
             """)
         st.write("---")
-        ls = Utils.get_example_names_list()
+        ls = Utils.get_example_names_list('examples')
         choice = st.selectbox("Choose Template",ls)
         Utils.run_simulation_from_template(choice)
-
-
-
 
     st.sidebar.markdown("# :clipboard: About")
     st.sidebar.info("Make sure to check us out at [Episimmer](https://github.com/healthbadge/episimmer).\

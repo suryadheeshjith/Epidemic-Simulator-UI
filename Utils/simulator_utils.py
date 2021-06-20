@@ -88,6 +88,7 @@ def get_options_to_run(fn, *args):
         run_agent_vulnerabilities(config_obj, no_iterations)
 
 
+
 ##########################################################################################
 # Run simulation from upload
 def get_world_object_upload(config_obj, st_list):
@@ -106,7 +107,7 @@ def get_world_object_upload(config_obj, st_list):
 def run_simulation_from_upload(config_obj):
     st_list = get_progress_UI_list()
     if(files_checker(config_obj)):
-        get_options_to_run(get_world_object_upload,config_obj, st_list)
+        get_options_to_run(get_world_object_upload, config_obj, st_list)
 
 ##########################################################################################
 # Run simulation from web
@@ -114,8 +115,8 @@ def get_world_object_web(config_obj, state, st_list):
     config_obj.model = state.params['Model']['model']
     config_obj.policy_list = copy.deepcopy(state.params['Policy']['Policy list']) ### Very important to deep copy because streamlit refreshes if any of its variables change.
     config_obj.event_restriction_fn = state.params['Policy']['Event Restriction Function']
-    config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
-    config_obj.list_events_files = get_file_names_list(config_obj.events_files_list)
+    config_obj.list_interactions_files = get_file_names_list([config_obj.interactions_files_list], '')
+    config_obj.list_events_files = get_file_names_list([config_obj.events_files_list], '')
     world_obj=Simulator.World.World(config_obj,config_obj.model,config_obj.policy_list,config_obj.event_restriction_fn,config_obj.agents_filename,\
                                     config_obj.list_interactions_files,config_obj.locations_filename,config_obj.list_events_files,st_list)
     config_obj.world_obj = world_obj
@@ -137,16 +138,14 @@ def get_world_object_template(example_path, config_obj, st_list):
     config_obj.model = model
     config_obj.policy_list = policy_list
     config_obj.event_restriction_fn = event_restriction_fn
-    config_obj.list_interactions_files = None
-    config_obj.list_events_files = None
+    config_obj.list_interactions_files = []
+    config_obj.list_events_files = []
     try:
-        ls = get_file_names_list(config_obj.interactions_files_list)
-        config_obj.list_interactions_files = [osp.join(example_path,f) for f in ls]
+        config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list_list, example_path)
     except:
         pass
     try:
-        ls = get_file_names_list(config_obj.events_files_list)
-        config_obj.list_events_files = [osp.join(example_path,f) for f in ls]
+        config_obj.list_events_files = get_file_names_list(config_obj.events_files_list_list, example_path)
     except:
         pass
 

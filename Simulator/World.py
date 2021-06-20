@@ -42,16 +42,8 @@ class World():
 		for i in range(time_steps):
 			self.st_list[2].write("Simulating Time Step : {0}".format(i+1))
 			self.st_list[3].progress((i+1)/time_steps)
-			if self.interactionFiles_list==[] or self.interactionFiles_list==None:
-				interactions_filename=None
-			else:
-				interactions_filename=self.interactionFiles_list[i%len(self.interactionFiles_list)]
-			if self.eventFiles_list==[] or self.eventFiles_list==None:
-				events_filename=None
-			else:
-				events_filename=self.eventFiles_list[i%len(self.eventFiles_list)]
 
-			sim_obj.onStartTimeStep(interactions_filename,events_filename,i)
+			sim_obj.onStartTimeStep(self.interactionFiles_list,self.eventFiles_list,i)
 			sim_obj.handleTimeStepForAllAgents()
 			sim_obj.endTimeStep()
 

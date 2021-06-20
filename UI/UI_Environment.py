@@ -107,7 +107,7 @@ class UI_Environment(UI_Base):
                     string = file.getvalue().decode("utf-8")
                     write_to_file(string, file.name)
                     cur_dict['Input Mode']['list_filename'] = file.name
-                    list_interactions_files = get_file_names_list(file.name)
+                    list_interactions_files = get_file_names_list([file.name], '')[0]
 
                     if(not list_interactions_files):
                         st.error("Could not read any interaction files!")
@@ -207,7 +207,7 @@ class UI_Environment(UI_Base):
                 if(file is not None):
                     string = file.getvalue().decode("utf-8")
                     write_to_file(string, file.name)
-                    list_events_files = get_file_names_list(file.name)
+                    list_events_files = get_file_names_list([file.name], '')[0]
 
                     if(not list_events_files):
                         st.error("Could not read any event files!")

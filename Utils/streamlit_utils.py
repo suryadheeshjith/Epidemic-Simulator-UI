@@ -1,7 +1,8 @@
 import streamlit as st
 import Simulator.ReadFile
 import Simulator.Model as Model
-from Utils.file_utils import write_to_file, get_file_names_list, get_random_graph_lines, get_star_graph_lines
+from Utils.file_utils import write_to_file, get_file_names_list, get_random_graph_lines, get_star_graph_lines, check_files_list_list
+from csv import DictReader
 from pyvis.network import Network
 import streamlit.components.v1 as components
 
@@ -26,8 +27,8 @@ def get_config_file_uploader(key):
             string = file.getvalue().decode("utf-8")
             write_to_file(string, "config.txt")
             config_obj=Simulator.ReadFile.ReadConfiguration("config.txt")
-            config_obj.list_interactions_files = None #### Editing simulator
-            config_obj.list_events_files = None #### Editing simulator
+            config_obj.list_interactions_files = [] #### Editing simulator
+            config_obj.list_events_files = [] #### Editing simulator
         else:
             st.error("""
                     Given File : {0}  Required File : config.txt
@@ -35,113 +36,64 @@ def get_config_file_uploader(key):
 
     return config_obj
 
-def get_agents_file_uploader(config_obj):
-    file = st.file_uploader("Upload agents file")
+def get_single_file_uploader(mode, file_name):
+    file = st.file_uploader("Upload {0} file".format(mode))
     if(file is not None):
-        if(file.name == config_obj.agents_filename):
+        if(file.name == file_name):
             string = file.getvalue().decode("utf-8")
-            write_to_file(string, config_obj.agents_filename)
+            write_to_file(string, file_name)
         else:
             st.error("""
                     Given File : {0}  Required File : {1}
-                    """.format(file.name,config_obj.agents_filename))
+                    """.format(file.name,file_name))
 
-def get_model_file_uploader():
-    file = st.file_uploader("Upload Model file")
-    if(file is not None):
-        if(file.name == "UserModel.py"):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, "UserModel.py")
-        else:
-            st.error("""
-                    Given File : {0}  Required File : {1}
-                    """.format(file.name,"UserModel.py"))
 
-def get_policy_file_uploader():
-    file = st.file_uploader("Upload Policy file")
-    if(file is not None):
-        if(file.name == "Generate_policy.py"):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, "Generate_policy.py")
-        else:
-            st.error("""
-                    Given File : {0}  Required File : {1}
-                    """.format(file.name,"Generate_policy.py"))
+def get_multiple_file_uploaders(mode, files_list_list):
+    listOflist_files = []
+    st.markdown("Upload {0} Files ".format(mode))
+    for files_list in files_list_list:
+        f1 = st.file_uploader("Upload File name : {0}".format(files_list))
+        if(f1 is not None):
+            if(f1.name == files_list):
+                string = f1.getvalue().decode("utf-8")
+                write_to_file(string, files_list)
+            else:
+                st.error("""
+                        Given File : {0}  Required File : {1}
+                        """.format(f1.name,files_list))
 
-def get_location_file_uploader(config_obj):
-    file = st.file_uploader("Upload Locations")
-    if(file is not None):
-        if(file.name == config_obj.locations_filename):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, config_obj.locations_filename)
-        else:
-            st.error("""
-                    Given File : {0}  Required File : {1}
-                    """.format(file.name,config_obj.locations_filename))
-
-def get_interaction_files_uploaders(config_obj):
-    file = st.file_uploader("Upload Interactions list file")
-    if(file is not None):
-        if(file.name == config_obj.interactions_files_list):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, config_obj.interactions_files_list)
-            config_obj.list_interactions_files = get_file_names_list(config_obj.interactions_files_list)
-            for file_name in config_obj.list_interactions_files:
-                f = st.file_uploader("Upload File name : {0}".format(file_name))
-                if(f is not None):
-                    if(f.name == file_name):
-                        string = f.getvalue().decode("utf-8")
+    if(check_files_list_list(files_list_list)):
+        listOflist_files = get_file_names_list(files_list_list, "")
+        for ls in listOflist_files:
+            for file_name in ls:
+                f2 = st.file_uploader("Upload File name : {0}".format(file_name))
+                if(f2 is not None):
+                    if(f2.name == file_name):
+                        string = f2.getvalue().decode("utf-8")
                         write_to_file(string, file_name)
                     else:
                         st.error("""
                                 Given File : {0}  Required File : {1}
-                                """.format(f.name,file_name))
-        else:
-            st.error("""
-                    Given File : {0}  Required File : {1}
-                    """.format(file.name,config_obj.interactions_files_list))
-
-
-def get_event_files_uploaders(config_obj):
-    file = st.file_uploader("Upload Events list file")
-    if(file is not None):
-        if(file.name == config_obj.events_files_list):
-            string = file.getvalue().decode("utf-8")
-            write_to_file(string, config_obj.events_files_list)
-            config_obj.list_events_files = get_file_names_list(config_obj.events_files_list)
-            for file_name in config_obj.list_events_files:
-                f = st.file_uploader("Upload File name : {0}".format(file_name))
-                if(f is not None):
-                    if(f.name == file_name):
-                        string = f.getvalue().decode("utf-8")
-                        write_to_file(string, file_name)
-                    else:
-                        st.error("""
-                                Given File : {0}  Required File : {1}
-                                """.format(f.name,file_name))
-        else:
-            st.error("""
-                    Given File : {0}  Required File : {1}
-                    """.format(file.name,config_obj.events_files_list))
-
+                                """.format(f2.name,file_name))
+    return listOflist_files
 
 def get_uploaders(key):
 
     config_obj = get_config_file_uploader(key)
 
     if(config_obj):
-        get_agents_file_uploader(config_obj)
-        get_model_file_uploader()
-        get_policy_file_uploader()
+        get_single_file_uploader("Agents", config_obj.agents_filename)
+        get_single_file_uploader("Model", "UserModel.py")
+        get_single_file_uploader("Policy", "Generate_policy.py")
 
-        if(config_obj.interactions_files_list):
-            get_interaction_files_uploaders(config_obj)
+        if(config_obj.interactions_files_list_list != ['']):
+            config_obj.list_interactions_files = get_multiple_file_uploaders("Interactions",config_obj.interactions_files_list_list)
 
         if(config_obj.locations_filename):
-            get_location_file_uploader(config_obj)
+            get_single_file_uploader("Locations",config_obj.locations_filename)
 
-        if(config_obj.events_files_list):
-            get_event_files_uploaders(config_obj)
+        if(config_obj.events_files_list_list != ['']):
+            config_obj.list_events_files = get_multiple_file_uploaders("Events",config_obj.events_files_list_list)
 
     return config_obj
 
@@ -156,22 +108,34 @@ def get_num_agents(agents_file):
 def get_interaction_graph_from_file(number_of_agents, interaction_file_path):
 
     fp = open(interaction_file_path,'r')
+    file_type = interaction_file_path[-3:]
 
     outpath = interaction_file_path[:-3]+'html'
-
-    num = int(fp.readline())
-    fp.readline()
-
-    ls = list(range(number_of_agents))
     net = Network()
+    if(file_type=='txt'):
+        num = int(fp.readline())
+        fp.readline()
 
-    net.add_nodes(ls)
+        ls = list(range(number_of_agents))
 
-    for i in range(num):
-        line = fp.readline()
-        line = line[:-1]
-        a,b = line.split(':')
-        net.add_edge(int(a),int(b))
+        net.add_nodes(ls)
+
+        for i in range(num):
+            line = fp.readline()
+            line = line[:-1]
+            a,b = line.split(':')
+            net.add_edge(int(a),int(b))
+
+    elif(file_type=='csv'):
+        csv_dict_reader=DictReader(fp)
+        csv_list=list(csv_dict_reader)
+        n=len(csv_list)
+        ls = list(range(n))
+        net.add_nodes(ls)
+
+        for i in range(n):
+            info_dict=csv_list[i]
+            net.add_edge(int(info_dict['Agent Index']),int(info_dict['Interacting Agent Index']))
 
     fp.close()
     net.show_buttons(filter_=['physics'])
