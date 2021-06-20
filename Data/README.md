@@ -1,6 +1,7 @@
 
 start_config.pkl currently saved as :
 ```
+'random seed': '',
 'worlds': 0,
 'time_steps': 0,
 'starting_exposed_percentage': None,
